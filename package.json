@@ -14,7 +14,7 @@
     }
   ],
   "scripts": {
-    "start": "supervisor --watch \".\" --extensions \"node|js|html|json\" app.js"
+    "start": "supervisor --watch . --extensions \"node|js|html|json\" app.js"
   },
   "repository": {
     "type": "git",
