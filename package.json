@@ -1,0 +1,33 @@
+{
+  "name": "gleam-demo",
+  "description": "Simple chat application to demo Gleam library.",
+  "version": "0.0.1",
+  "private": true,
+  "author": {
+    "name": "Nik Butenko",
+    "email": "nik@butenko.me"
+  },
+  "contributors": [
+    {
+      "name": "Nik Butenko",
+      "email": "nik@butenko.me"
+    }
+  ],
+  "scripts": {
+    "start": "supervisor --watch \".\" --extensions \"node|js|html|json\" app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/nkbt/gleam-demo.git"
+  },
+  "dependencies": {
+    "gleam": "https://github.com/nkbt/gleam/tarball/master",
+    "express": "*",
+    "ejs": "*",
+    "async": "*",
+    "underscore": "*",
+    "redis": "*",
+    "socket.io": "*"
+  }
+
+}
