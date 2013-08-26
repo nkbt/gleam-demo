@@ -3,10 +3,15 @@
 <head>
 	<meta charset="UTF-8">
 	<title>Gleam Demo</title>
+	<script type="text/javascript" data-main="/js/app" src="/js/vendor/require.js"></script>
 </head>
 <body>
-
-Demo!
-
+<div data-component="test">
+	<input data-component="test-run" type="button" value="Get Data!"/>
+	<input data-component="test-run-message" type="button" value="Get Message"/>
+	<input data-component="test-run-fail" type="button" value="Get Data! (fail)"/>
+	<input data-component="test-run-404" type="button" value="Get Data! (404)"/>
+	<div data-component="test-table-container"></div>
+</div>
 </body>
 </html>
