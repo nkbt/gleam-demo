@@ -22,6 +22,8 @@
   },
   "dependencies": {
     "gleam": "https://github.com/nkbt/gleam/tarball/master",
+    "static-bootstrap": "https://github.com/nkbt/node-express-static-bootstrap/tarball/master",
+    "dispatcher": "https://github.com/nkbt/node-express-dispatcher/tarball/master",
     "express": "*",
     "ejs": "*",
     "async": "*",
