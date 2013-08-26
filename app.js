@@ -35,6 +35,10 @@ app.use(errorHandler(dispatcher));
 
 app.get('/', dispatcher.route('index', 'index'));
 app.get('/users', dispatcher.route('user', 'index'));
+app.get('/test', dispatcher.route('test', 'index'));
+app.get('/test/message', dispatcher.route('test', 'message'));
+app.get('/test/fail', dispatcher.route('test', 'fail'));
+app.get('/test/sample', dispatcher.route('test', 'sample'));
 app.get('*', dispatcher.route('error', 'index'));
 
 http.createServer(app).listen(app.get('port'), function () {
