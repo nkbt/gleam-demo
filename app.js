@@ -30,7 +30,6 @@ app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('qwerty1234'));
 app.use(express.session());
-app.use(app.router);
 app.use(errorHandler(dispatcher));
 
 
