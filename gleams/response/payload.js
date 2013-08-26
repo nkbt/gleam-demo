@@ -18,11 +18,6 @@ var PayloadEntity = {
 	data: null,
 
 	/**
-	 * @type {String}
-	 */
-	type: '',
-
-	/**
 	 * @private
 	 */
 	validateData: function (value) {
