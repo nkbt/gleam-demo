@@ -39,6 +39,13 @@ app.get('/test', dispatcher.route('test', 'index'));
 app.get('/test/message', dispatcher.route('test', 'message'));
 app.get('/test/fail', dispatcher.route('test', 'fail'));
 app.get('/test/sample', dispatcher.route('test', 'sample'));
+
+
+app.get('/chats', dispatcher.route('chat', 'index'));
+app.post('/chat/add', dispatcher.route('chat', 'add'));
+app.post('/chat/edit', dispatcher.route('chat', 'edit'));
+app.post('/chat/del', dispatcher.route('chat', 'del'));
+
 app.get('*', dispatcher.route('error', 'index'));
 
 http.createServer(app).listen(app.get('port'), function () {
