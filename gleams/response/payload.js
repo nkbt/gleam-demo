@@ -2,10 +2,9 @@
 
 var _ = require('underscore');
 /**
- * @see {AbstractEntity}
  * @mixes {AbstractEntity}
  */
-var PayloadEntity = {
+var ResponsePayloadEntity = {
 
 	/**
 	 * @type {String}
@@ -25,4 +24,4 @@ var PayloadEntity = {
 	}
 };
 
-exports.Entity = PayloadEntity;
+exports.Entity = ResponsePayloadEntity;

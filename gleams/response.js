@@ -8,12 +8,12 @@ var ResponseEntity = {
 	redirect: null,
 
 	/**
-	 * @type {MessageEntity[]}
+	 * @type {ResponseMessageEntity[]}
 	 */
 	message: [],
 
 	/**
-	 * @type {PayloadEntity[]}
+	 * @type {ResponsePayloadEntity[]}
 	 */
 	payload: []
 };

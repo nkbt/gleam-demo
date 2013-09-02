@@ -3,7 +3,7 @@
 /**
  * @mixes {AbstractEntity}
  */
-var MessageEntity = {
+var ResponseMessageEntity = {
 
 	/**
 	 * @type {Boolean}
@@ -21,4 +21,4 @@ var MessageEntity = {
 	text: ''
 };
 
-exports.Entity = MessageEntity;
+exports.Entity = ResponseMessageEntity;
