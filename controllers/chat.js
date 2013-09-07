@@ -6,8 +6,8 @@ var async = require('async');
 var redis = require('redis');
 var client = redis.createClient();
 
-var crypto = require('crypto');
-var sha = crypto.createHash('sha1');
+//var crypto = require('crypto');
+//var sha = crypto.createHash('sha1');
 //crypto.createHash('md5').update(name).digest("hex")
 
 function chatCreator(data) {
@@ -45,9 +45,7 @@ exports.index = function (req, callback) {
 
 	async.waterfall([
 		client.keys.bind(client, 'chat:*'),
-		client.get.bind(client, 'chat:*'),
-
-
+		client.get.bind(client, 'chat:*')
 	]);
 
 	client.keys('chat:*', function (error, keys) {

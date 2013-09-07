@@ -1,6 +1,8 @@
 'use strict';
 
 var gleam = require('gleam');
+var dispatcher = require('dispatcher');
+var crud = require('../crud');
 
 exports.index = function (req, callback) {
 
@@ -26,4 +28,17 @@ exports.message = function (req, callback) {
 
 exports.sample = function (req, callback) {
 	callback(null, {success: true}, 'Success');
+};
+
+
+
+exports.chat = function(req, callback) {
+
+
+	if (dispatcher.http.isGet(req)) {
+		crud.selectEntityList('chat', callback);
+	}
+	
+	
+	
 };

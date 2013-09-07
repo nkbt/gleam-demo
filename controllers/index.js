@@ -32,7 +32,7 @@ function patchIndex(req, next) {
 }
 
 exports.index = function (req, next) {
-
+	
 	if (dispatcher.http.isPost(req)) {
 		return postIndex(req, next);
 	}
