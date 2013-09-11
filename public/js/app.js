@@ -5,8 +5,6 @@ requirejs.config({
 	paths: {
 		underscore: 'vendor/underscore',
 		dom: 'vendor/jquery',
-		plugin: 'vendor/require',
-		template: 'vendor/require/text',
 		string: 'vendor/string',
 		bootstrap: ['vendor/bootstrap', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js']
 	},
@@ -30,14 +28,17 @@ requirejs.config({
 	]
 });
 
-
 // Start the main app logic.
 requirejs([
 	'dom',
 	'lib/app',
 	'lib/layout',
 	'lib/dispatcher',
-	'lib/sidebar'
+	'lib/sidebar',
+	'vendor/require/css!/css/bootstrap.css',
+	'vendor/require/css!/css/bootstrap-theme.css',
+	'vendor/require/css!/css/font-awesome.css',
+	'vendor/require/css!/css/style.css'
 ], function ($, app) {
 	console.log('App loaded');
 

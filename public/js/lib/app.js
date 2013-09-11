@@ -6,7 +6,7 @@ define('lib/app', ['dom'], function ($) {
 
 
 	function template(path, callback) {
-		var templateModule = ['template!', path].join('');
+		var templateModule = ['vendor/require/text!', path].join('');
 		return path && require(
 			[templateModule],
 			callback,
