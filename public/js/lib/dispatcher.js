@@ -1,6 +1,6 @@
 "use strict";
 
-define('lib/dispatcher', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'], function (module, $, _, app, router) {
+define('lib/dispatcher', ['module', 'dom', 'underscore', 'lib/app', 'lib/router', 'lib/navigation'], function (module, $, _, app, router) {
 
 	var config = _.defaults(module.config(), {
 			basePath: 'app/controllers'
@@ -23,7 +23,7 @@ define('lib/dispatcher', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'
 			[controllerModule],
 			function controllerModuleLoaded() {
 				console.log('lib/dispatcher', 'trigger', [controllerModule, ':run'].join(''), actionName);
-				return app.trigger([controllerModule, ':run'].join(''), [actionName]);
+				return app.$root.trigger([controllerModule, ':run'].join(''), [actionName]);
 			},
 			function (error) {
 				console.warn('lib/dispatcher', controllerModule, error.message, error.stack.split('\n'));
@@ -43,7 +43,8 @@ define('lib/dispatcher', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'
 				path: path
 			};
 		window.history.pushState(state, null, path);
-		return app.trigger('lib/dispatcher:urlChanged', [path]);
+		console.log('lib/dispatcher', 'trigger', 'lib/dispatcher:urlChanged', path);
+		return app.$root.trigger('lib/dispatcher:urlChanged', [path]);
 	}
 
 
@@ -89,13 +90,19 @@ define('lib/dispatcher', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'
 	}
 
 
-	app
+	app.$root
 		.on('lib/dispatcher:dispatch', null, onDispatch)
 		.on('click', '.lib_dispatcher-link', onClick);
 
 
-	
-	
+	/**
+	 * Restoring current page
+	 */
+	$(function () {
+		var route = router.route(document.location.pathname);
+		run(route);
+	});
+
 	return {
 		dispatch: dispatch
 	};

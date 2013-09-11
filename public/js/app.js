@@ -43,6 +43,6 @@ requirejs([
 	console.log('App loaded');
 
 	$(function () {
-		app.trigger('lib/layout:render');
+		app.$root.trigger('lib/layout:render');
 	});
 });

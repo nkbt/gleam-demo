@@ -12,13 +12,13 @@ define('lib/layout', ['dom', 'underscore', 'lib/app'], function ($, _, app) {
 		return app.template(templateName, function (template) {
 			$element
 				.html(template)
-				.trigger('lib/layout:render');
+				.trigger('lib/layout:render', templateName);
 		});
 	}
 
 
 	function render(element) {
-		var $element = $(element).length && $(element) || app.element;
+		var $element = $(element).length && $(element) || app.$root;
 		_.each($element.find('.lib_layout[data-lib_layout-template]:not([data-lib_layout-rendered])'), initTemplate);
 	}
 
@@ -36,7 +36,7 @@ define('lib/layout', ['dom', 'underscore', 'lib/app'], function ($, _, app) {
 			.trigger('lib/layout:renderBlock:done', [blockName]);
 	}
 
-	app
+	app.$root
 		.on('lib/layout:render', null, onRender)
 		.on('lib/layout:renderBlock', null, onRenderBlock);
 

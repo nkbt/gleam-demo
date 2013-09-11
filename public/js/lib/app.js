@@ -17,9 +17,7 @@ define('lib/app', ['dom'], function ($) {
 	}
 
 	return {
-		element: $element,
-		on: $element.on.bind($element),
-		trigger: $element.trigger.bind($element),
+		'$root': $element,
 		template: template
 	};
 
