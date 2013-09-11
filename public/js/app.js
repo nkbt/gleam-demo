@@ -1,10 +1,13 @@
+'use strict';
+
 requirejs.config({
 	baseUrl: '/js',
 	paths: {
 		underscore: 'vendor/underscore',
 		dom: 'vendor/jquery',
 		plugin: 'vendor/require',
-//		string: 'vendor/string',
+		template: 'vendor/require/text',
+		string: 'vendor/string',
 		bootstrap: ['vendor/bootstrap', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js']
 	},
 	shim: {
@@ -14,9 +17,9 @@ requirejs.config({
 		underscore: {
 			exports: '_'
 		},
-//		string: {
-//			exports: 'S'
-//		},
+		string: {
+			exports: 'S'
+		},
 		dom: {
 			exports: 'jQuery'
 		},
@@ -30,9 +33,15 @@ requirejs.config({
 
 // Start the main app logic.
 requirejs([
+	'dom',
+	'lib/app',
+	'lib/layout',
 	'lib/dispatcher',
-	'lib/sidebar',
-	'app/chat'
-], function () {
+	'lib/sidebar'
+], function ($, app) {
 	console.log('App loaded');
+
+	$(function () {
+		app.trigger('lib/layout:render');
+	});
 });
