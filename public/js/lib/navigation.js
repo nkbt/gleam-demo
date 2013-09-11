@@ -13,7 +13,7 @@ define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app'], function (m
 	function changeUrl(path) {
 		return function () {
 			app.$root.find(['.lib_navigation-item', config.active].join('.')).removeClass(config.active);
-			app.$root.find('.lib_navigation-item[data-lib_navigation-match="' + path + '"]').addClass(config.active);
+			return app.$root.find('.lib_navigation-item[data-lib_navigation-match="' + path + '"]').addClass(config.active);
 		};
 	}
 
@@ -30,7 +30,7 @@ define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app'], function (m
 	}
 
 	app.$root.on('lib/dispatcher:urlChanged', null, onUrlChanged);
-	app.$root.one('lib/layout:render', '.lib_navigation', init);
+	app.$root.one('lib/layout:render:done', '.lib_navigation', init);
 
 
 	return {
