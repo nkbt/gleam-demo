@@ -15,15 +15,16 @@ define('lib/dispatcher', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'
 
 
 	function loadController(route) {
-		var controllerName = route.split('/').shift(),
-			actionName = route.split('/').pop(),
+		var routeParts = route.split('/'),
+			controllerName = routeParts.shift(),
+			actionName = routeParts.shift(),
 			controllerModule = [config.basePath, controllerName].join('/');
 
 		require(
 			[controllerModule],
 			function controllerModuleLoaded() {
-				console.log('lib/dispatcher', 'trigger', [controllerModule, ':run'].join(''), actionName);
-				return app.$root.trigger([controllerModule, ':run'].join(''), [actionName]);
+				console.log('lib/dispatcher', 'trigger', 'lib/dispatcher:run', controllerName, actionName);
+				return app.$root.trigger('lib/dispatcher:run', [controllerName, actionName]);
 			},
 			function (error) {
 				console.warn('lib/dispatcher', controllerModule, error.message, error.stack.split('\n'));
@@ -64,7 +65,9 @@ define('lib/dispatcher', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'
 	 */
 	function dispatch(route) {
 		var currentRoute = router.route(document.location.pathname);
+		console.log("currentRoute", currentRoute);
 		route = router.route(route);
+		console.log("route", route);
 
 		return route !== currentRoute && run(route);
 	}
