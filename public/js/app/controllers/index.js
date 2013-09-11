@@ -1,16 +1,29 @@
 "use strict";
 
-define('app/test', ['dom', 'underscore', 'lib/app', 'lib/request', 'lib/messenger'], function ($, _, app, request) {
+define('app/controllers/index', ['dom', 'underscore', 'lib/app', 'lib/request', 'lib/messenger'], function ($, _, app, request) {
 
 
-	function index() {
+	var actions = {};
+
+	actions.index = function (template) {
+		app.$root.trigger('lib/layout:renderBlock', ['content', template]);
+	};
+
+	function destroy() {
 
 	}
 
 
-	return {
-		index: index
-	};
+	app.$root.on('lib/dispatcher:run', null, function (event, controller, action) {
+		if (controller === 'index') {
+			app.view(controller, action, actions[action]);
+		} else {
+			destroy();
+		}
+	});
+
+
+	return actions;
 
 
 });

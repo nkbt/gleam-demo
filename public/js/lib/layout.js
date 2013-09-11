@@ -9,10 +9,10 @@ define('lib/layout', ['dom', 'underscore', 'lib/app'], function ($, _, app) {
 
 		$element.attr('data-lib_layout-rendered', true);
 		
-		return app.template(templateName, function (template) {
-			$element
-				.html(template)
-				.trigger('lib/layout:render', templateName);
+		return app.template(templateName, function (content) {
+			var $content = $($.parseHTML(content.trim()));
+			$element.html($content);
+			$content.trigger('lib/layout:render:done', [templateName]);
 		});
 	}
 
@@ -24,7 +24,7 @@ define('lib/layout', ['dom', 'underscore', 'lib/app'], function ($, _, app) {
 
 
 	function onRender(event) {
-		return render($(event.target).closest('.lib_layout'));
+		return render($(event.target));
 	}
 
 
@@ -39,8 +39,9 @@ define('lib/layout', ['dom', 'underscore', 'lib/app'], function ($, _, app) {
 
 	app.$root
 		.on('lib/layout:render', null, onRender)
+		.on('lib/layout:render:done', null, onRender)
 		.on('lib/layout:renderBlock', null, onRenderBlock)
-		.on('lib/layout:renderBlock:done', '.lib_layout:not([data-lib_layout-rendered])', onRender);
+		.on('lib/layout:renderBlock:done', null, onRender);
 	
 
 
