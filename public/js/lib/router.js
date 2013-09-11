@@ -7,7 +7,8 @@ define('lib/router', ['module', 'underscore'], function (module, _) {
 	var config = _.defaults(module.config(), {
 		controllerName: 'index',
 		actionName: 'index'
-	});
+	}),
+		regex = new RegExp('^//');
 
 	function parse(url) {
 		var element = document.createElement("a");
@@ -17,7 +18,7 @@ define('lib/router', ['module', 'underscore'], function (module, _) {
 		return {
 			protocol: element.protocol,
 			hostname: element.hostname,
-			pathname: element.pathname,
+			pathname: ['/', element.pathname].join('/').replace(regex, '/'),
 			search: element.search
 		};
 	}
@@ -26,7 +27,6 @@ define('lib/router', ['module', 'underscore'], function (module, _) {
 		var location = parse(url),
 			params = location.pathname.split('/'),
 			paramsSize = _.size(params);
-
 
 		/**
 		 * "/"
