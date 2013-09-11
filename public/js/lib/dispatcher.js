@@ -1,77 +1,102 @@
 "use strict";
-/*jshint browser:true */
-/*jslint browser:true */
 
-define('lib/dispatcher', ['dom', 'underscore', 'lib/router'], function ($, _, router) {
+define('lib/dispatcher', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'], function (module, $, _, app, router) {
 
-	var $body = $(document.body);
+	var config = _.defaults(module.config(), {
+			basePath: 'app/controllers'
+		}),
+		routeCleaner = new RegExp(
+			[
+				["^", router.controllerName, "\/", router.actionName, "$"].join(''),
+				["\/", router.actionName, "$"].join(''),
+				["^", router.controllerName, "$"].join('')
+			].join('|')
+		);
 
-	function initController(element) {
-		console.log('lib/dispatcher', "initController", element);
-		var $element = $(element),
-			controllerModule = $element.data('dispatcher-controller');
-		$element.attr('data-dispatcher-processed', true);
 
-		require([controllerModule], function () {
-			console.log([controllerModule, 'init'].join(':'));
-			$element.trigger([controllerModule, 'init'].join(':'));
-		});
+	function loadController(route) {
+		var controllerName = route.split('/').shift(),
+			actionName = route.split('/').pop(),
+			controllerModule = [config.basePath, controllerName].join('/');
+
+		require(
+			[controllerModule],
+			function controllerModuleLoaded() {
+				console.log('lib/dispatcher', 'trigger', [controllerModule, ':run'].join(''), actionName);
+				return app.trigger([controllerModule, ':run'].join(''), [actionName]);
+			},
+			function (error) {
+				console.warn('lib/dispatcher', controllerModule, error.message, error.stack.split('\n'));
+			}
+		);
 	}
 
-	function initTemplate(element) {
-		console.log('lib/dispatcher', "initTemplate", element);
-		var $element = $(element),
-			templateName = $element.data('dispatcher-template');
 
-		$element.attr('data-dispatcher-processed', true);
-
-		require([['plugin/text', templateName].join('!')], function (template) {
-			console.log([templateName, 'init'].join(':'));
-			$element
-				.html(template)
-				.trigger('lib/dispatcher:init');
-		});
-	}
-
-	function initPage(page, title) {
-		var path = ['/', page].join(''),
+	/**
+	 * @param {String} route
+	 * @returns {*}
+	 */
+	function updateUrl(route) {
+		var path = ['/', route.replace(routeCleaner, '')].join(''),
 			state = {
-				page: page,
-				title: title,
+				page: route,
 				path: path
 			};
-		return window.history.pushState(state, title, path);
+		window.history.pushState(state, null, path);
+		return app.trigger('lib/dispatcher:urlChanged', [path]);
 	}
 
 
-	function init() {
-		_.each($('.jsDispatcher[data-dispatcher-controller]:not([data-dispatcher-processed])'), initController);
-		_.each($('.jsDispatcher[data-dispatcher-template]:not([data-dispatcher-processed])'), initTemplate);
+	/**
+	 * @param {String} route
+	 * @returns {*}
+	 */
+	function run(route) {
+		updateUrl(route);
+		return loadController(route);
 	}
 
-	function dispatch(controller) {
 
+	/**
+	 * @param {String} route
+	 * @returns {*}
+	 */
+	function dispatch(route) {
+		var currentRoute = router.route(document.location.pathname);
+		route = router.route(route);
+
+		return route !== currentRoute && run(route);
 	}
 
 
-	$body.on('lib/dispatcher:init', init);
-	$body.on('click', '.jsDispatcher-link', function (event) {
+	/**
+	 * @param {Event} event
+	 * @param {String} route
+	 * @returns {*}
+	 */
+	function onDispatch(event, route) {
+		return _.isString(route) && dispatch(route);
+	}
+
+
+	/**
+	 * @param {Event} event
+	 * @returns {*}
+	 */
+	function onClick(event) {
 		event.preventDefault();
-		var $link = $(event.target).closest('.jsDispatcher-link'),
-			currentRoute = router.route(document.location.pathname),
-			newRoute = router.route($link.attr('href'));
-
-		return currentRoute !== newRoute && initPage(newRoute, $link.text());
-	});
+		return dispatch($(event.target).closest('.lib_dispatcher-link').attr('href'));
+	}
 
 
-	$(function () {
-		$body.trigger('lib/dispatcher:init');
-		initPage(router.route(document.location.pathname));
-	});
+	app
+		.on('lib/dispatcher:dispatch', null, onDispatch)
+		.on('click', '.lib_dispatcher-link', onClick);
 
+
+	
+	
 	return {
-		init: init,
 		dispatch: dispatch
 	};
 
