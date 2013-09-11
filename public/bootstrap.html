@@ -6,16 +6,18 @@
 	<link rel="stylesheet" href="/css/bootstrap.css">
 	<link rel="stylesheet" href="/css/bootstrap-theme.css">
 	<link rel="stylesheet" href="/css/style.css">
-
+	<link rel="stylesheet" href="/css/font-awesome.css">
 	<script type="text/javascript" data-main="/js/app" src="/js/vendor/require.js"></script>
 </head>
-<body>
+<body class="lib_layout">
 
-<div class="jsDispatcher" data-dispatcher-controller="app/navigation"></div>
+<div class="lib_layout" data-lib_layout-template="/templates/navigation.html"></div>
 
 <div class="container">
-	<div class="jsDispatcher" data-dispatcher-controller="app/index/index"></div>
-	<div class="jsDispatcher" data-dispatcher-template="/templates/footer.html"></div>
+	<div class="lib_layout" data-lib_layout-block="content">
+		<p class="text-center text-muted"><i class="icon-spinner icon-spin icon-4x"></i></p>
+	</div>
+	<div class="lib_layout" data-lib_layout-template="/templates/footer.html"></div>
 </div>
 
 </body>
