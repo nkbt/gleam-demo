@@ -6,7 +6,8 @@ requirejs.config({
 		underscore: 'vendor/underscore',
 		dom: 'vendor/jquery',
 		string: 'vendor/string',
-		bootstrap: ['vendor/bootstrap', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js']
+		bootstrap: ['vendor/bootstrap', '//netdna.bootstrapcdn.com/bootstrap/3.0.0/js/bootstrap.min.js'],
+		history: 'vendor/history/html5'
 	},
 	shim: {
 		async: {
@@ -20,6 +21,9 @@ requirejs.config({
 		},
 		dom: {
 			exports: 'jQuery'
+		},
+		history: {
+			exports: 'History'
 		},
 		bootstrap: ['dom']
 	},
