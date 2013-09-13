@@ -3,41 +3,93 @@
 /*jslint browser:true */
 
 
-define('lib/messenger', ['dom', 'underscore'], function ($, _) {
-	var $body = $(document.body);
-	var template = '<div data-component="messenger" style="position:absolute; right: 10px; top: 10px; padding: 10px 30px 10px 10px; min-width: 200px; max-width: 400px; min-height: 50px; color: #f1f2f4; background: #333; border-radius: 10px;">'
-		+ '<a data-component="messenger-close" href="javascript:void(0);" style="position:absolute; top: 3px; right: 3px; width: 20px; height: 20px; font-size: 14px; line-height: 20px; text-align:center; text-transform: uppercase;color: #fff; font-weight:bold; font-family:Arial, helvetica; text-decoration:none;background: #f33; border-radius: 10px;">X</a>'
-		+ '<div data-component="messenger-container"></div>'
-		+ '</div>';
-	var errorTemplate = '<p style="color: #faa"></p>';
-	var messageTemplate = '<p></p>';
+define('lib/messenger', ['module', 'dom', 'underscore', 'lib/app'], function (module, $, _, app) {
 
-	$body.on('click', '[data-component="messenger"] [data-component="messenger-close"]', function (event) {
-		$(event.target).closest('[data-component="messenger"]').remove();
+	var config = _.defaults(module.config(), {
+		hideTimeout: 2000
 	});
 
-	$body.on('messenger:removeMessage', function (event) {
-		var $message = $(event.target),
-			$container = $message.closest('[data-component="messenger-container"]');
-		$message.remove();
-		if (!$container.find('p').length) {
-			$container.closest('[data-component="messenger"]').remove();
+	function onShow(event, type, text) {
+		app.template('lib/messenger/template', function (template) {
+			var $element = app.$root.find('.lib_messenger');
+			if (!$element.length) {
+				$element = $(template);
+				$element.appendTo(app.$root);
+			}
+
+			app.template(['lib/messenger', type].join('/'), function (messageTemplate) {
+				var $message = $(messageTemplate);
+				$message.find('.lib_messenger-text').html(text);
+				return $message
+					.prependTo($element)
+					.trigger('lib/messenger:show:done', [type, text])
+					.trigger('lib/messenger:hideDelayed');
+			});
+
+		});
+	}
+
+	function clearTimer(message) {
+		var $message = $(message),
+			timer = $message.data('lib_messenger-hideTimer');
+		if (timer) {
+			window.clearTimeout(timer);
+			timer = null;
 		}
-	});
+		$message.data('lib_messenger-hideTimer', timer);
+	}
 
-	$body.on('messenger:show', function (event, messageEntity) {
-		var $container = $('[data-component="messenger"]'),
-			$message = $(messageEntity.isError ? errorTemplate : messageTemplate).clone().html(messageEntity.text);
 
-		if (!$container.length) {
-			$container = $body.append($(template).clone());
+	function hide(message) {
+		if (_.isEmpty(message)) {
+			return _.each(app.$root.find('.lib_messenger-message'), hider);
 		}
-		$container
-			.find('[data-component="messenger-container"]')
-			.append($message);
 
-		setTimeout(function () {
-			$message.trigger('messenger:removeMessage');
-		}, 2000);
-	});
+		var $message = $(message).closest('.lib_messenger-message');
+		clearTimer($message);
+		return $message.remove();
+	}
+
+	function hider(message) {
+		return function () {
+			hide(message);
+		};
+	}
+
+	function onHideDelayed(event) {
+		var $message = $(event.target).closest('.lib_messenger-message'),
+			hideTimeout = parseInt(parseInt($message.data('lib_messenger-autohide'), 10) || config.hideTimeout, 10);
+		clearTimer($message);
+		return $message.data('lib_messenger-hideTimeout', window.setTimeout(hider($message), hideTimeout));
+	}
+
+	function onClick(event) {
+		var $message = $(event.target).closest('.lib_messenger-message');
+		clearTimer($message);
+		return hide($message);
+	}
+
+	function onMouseover(event) {
+		var $message = $(event.target).closest('.lib_messenger-message');
+		return clearTimer($message);
+	}
+
+	app.$root
+		.on('lib/messenger:show', null, onShow)
+		.on('click', '.lib_messenger .lib_messenger-message', onClick)
+		.on(
+			'mouseover',
+			'.lib_messenger .lib_messenger-message[data-lib_messenger-autohide]',
+			onMouseover
+		)
+		.on(
+			'mouseout',
+			'.lib_messenger .lib_messenger-message[data-lib_messenger-autohide]',
+			onHideDelayed
+		)
+		.on(
+			'lib/messenger:hideDelayed',
+			'.lib_messenger .lib_messenger-message[data-lib_messenger-autohide]',
+			onHideDelayed
+		);
 });
