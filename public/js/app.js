@@ -1,6 +1,6 @@
 'use strict';
 
-requirejs.config({
+require.config({
 	baseUrl: '/js',
 	paths: {
 		underscore: 'vendor/underscore',
@@ -28,21 +28,27 @@ requirejs.config({
 		bootstrap: ['dom']
 	},
 	deps: [
-		'bootstrap'
 	]
 });
 
-// Start the main app logic.
-requirejs([
-	'dom',
-	'lib/app',
-	'lib/layout',
-	'lib/dispatcher',
-	'lib/sidebar',
+// Load CSS
+require([
 	'vendor/require/css!/css/bootstrap.css',
 	'vendor/require/css!/css/bootstrap-theme.css',
 	'vendor/require/css!/css/font-awesome.css',
 	'vendor/require/css!/css/style.css'
+], function () {
+	console.log('CSS loaded');
+});
+
+// Start the main app logic.
+require([
+	'dom',
+	'lib/app',
+	'bootstrap',
+	'lib/layout',
+	'lib/dispatcher',
+	'lib/sidebar'
 ], function ($, app) {
 	console.log('App loaded');
 

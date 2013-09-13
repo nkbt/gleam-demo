@@ -4,6 +4,7 @@ define(
 	'lib/dispatcher',
 	[
 		'module', 'dom', 'underscore', 'history', 'lib/app', 'lib/router',
+		'lib/layout',
 		'lib/navigation'
 	],
 	/**
@@ -15,7 +16,7 @@ define(
 	 * @param {lib/router} router
 	 * @returns {{dispatch: Function}}
 	 */
-	function (module, $, _, history, app, router) {
+		function (module, $, _, history, app, router) {
 
 		var config = _.defaults(module.config(), {
 				basePath: 'app/controllers'
@@ -54,13 +55,8 @@ define(
 		 * @returns {*}
 		 */
 		function updateUrl(route, title) {
-			var path = ['/', route.replace(routeCleaner, '')].join(''),
-				state = {
-					title: title,
-					page: route,
-					path: path
-				};
-			window.history.pushState(state, title, path);
+			var path = ['/', route.replace(routeCleaner, '')].join('');
+			history.pushState(null, title, path);
 			console.log('lib/dispatcher', 'trigger', 'lib/dispatcher:urlChanged', path, title);
 			return app.$root.trigger('lib/dispatcher:urlChanged', [path, title]);
 		}
@@ -72,12 +68,9 @@ define(
 		 * @returns {*}
 		 */
 		function dispatch(route, title) {
-			var currentRoute = router.route(document.location.pathname);
 			route = router.route(route);
-
 			updateUrl(route, title);
-
-			return route !== currentRoute && run(route);
+			return run(route);
 		}
 
 
@@ -101,21 +94,22 @@ define(
 			return dispatch($link.attr('href'), $link.data('lib_dispatcher-title') || $link.text());
 		}
 
-
 		app.$root
 			.on('lib/dispatcher:dispatch', null, onDispatch)
 			.on('click', '.lib_dispatcher-link', onClick);
 
 		/**
-		 * Restoring current page, we do not need to push url to history.
+		 * Restoring current page
 		 */
-		$(function () {
-			console.log("history.getState()", history.getState());
-//		var route = router.route(document.location.pathname),
-//			path = ['/', route.replace(routeCleaner, '')].join('');
-//		app.$root.trigger('lib/dispatcher:urlChanged', [path]);
-//		return run(route);
-		});
+		function restoreState() {
+			var state = history.getState();
+			console.log('lib/dispatcher', 'restoreState', state, state.hash, state.title);
+			return dispatch(state.hash, state.title);
+		}
+
+		history.Adapter.bind(window, 'statechange', restoreState);
+
+		$(restoreState);
 
 		return {
 			dispatch: dispatch
