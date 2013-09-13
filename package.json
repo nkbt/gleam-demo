@@ -25,7 +25,6 @@
     "static-bootstrap": "nkbt/node-express-static-bootstrap",
     "dispatcher": "nkbt/node-express-dispatcher",
     "express": "*",
-    "ejs": "*",
     "async": "*",
     "underscore": "*",
     "redis": "*",
