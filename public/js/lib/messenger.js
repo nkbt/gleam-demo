@@ -14,7 +14,7 @@ define('lib/messenger', ['module', 'dom', 'underscore', 'lib/app'], function (mo
 	});
 
 	function show(type, text) {
-		if (_.indexOf(type, config.types) === -1) {
+		if (!_.findWhere(config.types, type)) {
 			return console.warn('lib/messenger', 'unknown type', type);
 		}
 
