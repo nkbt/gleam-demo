@@ -3,9 +3,11 @@
 define(
 	'app/controllers/chat',
 	[
-		'dom', 'underscore', 'lib/app', 'lib/request', 'lib/messenger'
+		'dom', 'underscore',
+		'lib/app', 'lib/request', 'lib/messenger', 'lib/dom/form',
+		'entity/chat'
 	],
-	function ($, _, app, request, messenger) {
+	function ($, _, app, request, messenger, form, ChatEntity) {
 
 
 		var actions = {};
@@ -51,17 +53,27 @@ define(
 
 		function onAddChatSubmit(event) {
 			event.preventDefault();
-			console.log('event', event);
-			var $element = $(event.target).closest('.app_controllers_chat-add'),
-				type = Math.round(Math.random()) && messenger.TYPE_ERROR || messenger.TYPE_MESSAGE;
+			var $form = $(event.target).closest('.app_controllers_chat-add-form'),
+				chatEntity = new ChatEntity();
 
+			try {
+				chatEntity.set(form.values($form));
+			} catch (error) {
+				return $form.trigger('lib/messenger:show', [messenger.TYPE_ERROR, error.message]);
+			}
 
-			$element.trigger('lib/messenger:show', [type, type]);
+			form.disable($form);
+
+			return request(request.METHOD_POST, $form.attr('action'), chatEntity, function (error) {
+				if (!error) {
+					form.clear($form);
+				}
+				form.enable($form);
+			});
 		}
 
 		app.$root
-			.on('submit', '.app_controllers_chat-add', onAddChatSubmit);
-		console.log('123', 123);
+			.on('submit', '.app_controllers_chat-add .app_controllers_chat-add-form', onAddChatSubmit);
 
 		return actions;
 

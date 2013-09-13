@@ -26,12 +26,10 @@ function saveChat(id, chatEntity, callback) {
 			return callback(error);
 		}
 		if (chat) {
-			return callback(new Error(["Chat with name", id, "already exists"].join(' ')));
+			return callback(new Error(["Chat with name '", id, "' already exists"].join('')));
 		}
-
 		return client.set(['chat', id].join(':'), JSON.stringify(chatEntity), function (error) {
-			console.log("chatEntity", chatEntity);
-			callback(error, chatEntity);
+			return callback(error, chatEntity, ["Chat with name '", id, "' created"].join(''));
 		});
 	});
 }
@@ -63,7 +61,7 @@ exports.index = function (req, callback) {
 				.toArray()
 				.map(chatCreator)
 				.value() || []);
-		})
+		});
 	});
 };
 
@@ -87,7 +85,7 @@ exports.add = function (req, callback) {
 	 * @type {ChatEntity}
 	 */
 	var chatEntity = chatCreator(req.body);
-	saveChat(chatEntity.name, chatEntity, callback);
+	return saveChat(chatEntity.name, chatEntity, callback);
 };
 
 

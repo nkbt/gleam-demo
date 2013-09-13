@@ -28,7 +28,7 @@ var ChatEntity = {
 	 * @private
 	 */
 	validateName: function (value) {
-		return !_.isEmpty(value) && _.isEqual(value, value.replace(/[^a-z_\-0-9]+/, ''));
+		return !_.isEmpty(value) && _.isEqual(value, value.replace(/[^a-z_\-0-9]+/i, ''));
 	},
 
 	getId: function () {
@@ -40,7 +40,8 @@ var ChatEntity = {
 
 	getCreatedOn: function () {
 		if (!this.createdOn) {
-			return new Date();
+			var now = new Date();
+			return now.getTime();
 		}
 		return this.createdOn;
 	}

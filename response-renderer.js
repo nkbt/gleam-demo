@@ -20,20 +20,20 @@ module.exports = function (gleam) {
 				'isError': true,
 				'isMessage': false,
 				'text': message.message
-			}
+			};
 		} else {
 			return {
 				'isError': false,
 				'isMessage': true,
 				'text': message
-			}
+			};
 		}
 	}
 
 	function gleamEntityCreator(entityName) {
-		return function(data) {
+		return function (data) {
 			return gleam.entity(entityName, data);
-		}
+		};
 	}
 
 
@@ -47,7 +47,10 @@ module.exports = function (gleam) {
 		var responseGleam = gleam.entity('response'),
 			payloadGleam = gleam.entity('response/payload'),
 			messages = _.map(_.map(data.messages || [], createMessage), gleamEntityCreator('response/message'));
-		data.messages && delete data.messages;
+
+		if (data.messages) {
+			delete data.messages;
+		}
 
 
 		if (error) {
