@@ -6,18 +6,26 @@
 define('lib/messenger', ['module', 'dom', 'underscore', 'lib/app'], function (module, $, _, app) {
 
 	var config = _.defaults(module.config(), {
-		hideTimeout: 2000
+		hideTimeout: 2000,
+		types: {
+			TYPE_ERROR: 'error',
+			TYPE_MESSAGE: 'message'
+		}
 	});
 
-	function onShow(event, type, text) {
-		app.template('lib/messenger/template', function (template) {
+	function show(type, text) {
+		if (_.indexOf(type, config.types) === -1) {
+			return console.warn('lib/messenger', 'unknown type', type);
+		}
+
+		return app.template('lib/messenger/template', function (template) {
 			var $element = app.$root.find('.lib_messenger');
 			if (!$element.length) {
 				$element = $(template);
 				$element.appendTo(app.$root);
 			}
 
-			app.template(['lib/messenger', type].join('/'), function (messageTemplate) {
+			return app.template(['lib/messenger', type].join('/'), function (messageTemplate) {
 				var $message = $(messageTemplate);
 				$message.find('.lib_messenger-text').html(text);
 				return $message
@@ -28,6 +36,12 @@ define('lib/messenger', ['module', 'dom', 'underscore', 'lib/app'], function (mo
 
 		});
 	}
+
+
+	function onShow(event, type, text) {
+		return show(type, text);
+	}
+
 
 	function clearTimer(message) {
 		var $message = $(message),
@@ -92,4 +106,7 @@ define('lib/messenger', ['module', 'dom', 'underscore', 'lib/app'], function (mo
 			'.lib_messenger .lib_messenger-message[data-lib_messenger-autohide]',
 			onHideDelayed
 		);
+
+
+	return config.types;
 });
