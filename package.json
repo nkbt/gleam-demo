@@ -21,9 +21,9 @@
     "url": "http://github.com/nkbt/gleam-demo.git"
   },
   "dependencies": {
-    "gleam": "https://github.com/nkbt/gleam/tarball/master",
-    "static-bootstrap": "https://github.com/nkbt/node-express-static-bootstrap/tarball/master",
-    "dispatcher": "https://github.com/nkbt/node-express-dispatcher/tarball/master",
+    "gleam": "nkbt/gleam",
+    "static-bootstrap": "nkbt/node-express-static-bootstrap",
+    "dispatcher": "nkbt/node-express-dispatcher",
     "express": "*",
     "ejs": "*",
     "async": "*",
