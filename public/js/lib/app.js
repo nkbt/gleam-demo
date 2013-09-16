@@ -26,6 +26,11 @@ define('lib/app', ['module', 'dom', 'underscore'], function (module, $, _) {
 	}
 
 
+	function viewTemplate(controller, action, name, callback) {
+		return text([config.views, '/', controller, '/', action, '/', name, '.html'].join(''), callback);
+	}
+
+
 	function view(controller, action, callback) {
 		return text([config.views, '/', controller, '/', action, '.html'].join(''), callback);
 	}
@@ -34,6 +39,7 @@ define('lib/app', ['module', 'dom', 'underscore'], function (module, $, _) {
 	return {
 		'$root': $element,
 		template: template,
+		viewTemplate: viewTemplate,
 		view: view
 	};
 
