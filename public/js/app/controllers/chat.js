@@ -77,7 +77,25 @@ define(
 
 
 		function onIndexReady(event) {
-			console.log('onIndexReady', event.target);
+
+			var $element = $(event.target).closest('.app_controllers_chat-index'),
+				$container = $element.find('.app_controllers_chat-index-container');
+
+			return request(request.METHOD_GET, '/chat/index', {}, function (error, payload) {
+				$container.empty();
+
+				return _.each(payload.get('data'), function (chat) {
+					return app.viewTemplate('chat', 'index', 'item', function (template) {
+						console.warn('template', template);
+						return $(template).appendTo($container)
+							.find('.app_controllers_chat-index-item-link')
+							.attr('href', ['#!/chat/item', chat.get('id')].join('!'))
+							.html(chat.get('name'));
+					});
+				});
+			});
+
+
 		}
 
 		app.$root
