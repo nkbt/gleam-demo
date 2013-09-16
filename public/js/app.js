@@ -52,7 +52,8 @@ require([
 	'lib/app',
 	'bootstrap',
 	
-	'app/widgets/sidebar',
+	'app/widgets/sidebar/chats',
+	'app/widgets/sidebar/users',
 	
 	'lib/layout',
 	'lib/dispatcher',

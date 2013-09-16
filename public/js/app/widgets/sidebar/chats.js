@@ -1,17 +1,19 @@
 "use strict";
 
-define('app/widgets/sidebar', ['dom', 'underscore', 'lib/app', 'lib/request'], function ($, _, app, request) {
+define('app/widgets/sidebar/chats', ['dom', 'underscore', 'lib/app', 'lib/request'], function ($, _, app, request) {
 
 
 	function onChatsReady(event) {
-		var $element = $(event.target).closest('.app_widgets_sidebar-chats'),
-			$container = $element.find('.app_widgets_sidebar-chats-container');
+		var $element = $(event.target).closest('.app_widgets_sidebar_chats'),
+			$container = $element.find('.app_widgets_sidebar_chats-container');
 
 		return request(request.METHOD_GET, '/chat/index', {}, function (error, payload) {
+			$container.empty();
+
 			return _.each(payload.get('data'), function (chat) {
 				return app.template('widgets/sidebar/chats/item', function (template) {
 					return $(template).appendTo($container)
-						.find('.app_widgets_sidebar-chats-item-link')
+						.find('.app_widgets_sidebar_chats-item-link')
 						.attr('href', ['#!/chat/item', chat.get('id')].join('!'))
 						.html(chat.get('name'));
 				});
@@ -20,6 +22,6 @@ define('app/widgets/sidebar', ['dom', 'underscore', 'lib/app', 'lib/request'], f
 	}
 
 	app.$root
-		.on('lib/layout:render:done', '.app_widgets_sidebar-chats', onChatsReady);
+		.on('lib/layout:render:done', '.app_widgets_sidebar_chats', onChatsReady);
 
 });

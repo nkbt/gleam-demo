@@ -80,10 +80,19 @@ define(
 		function onIndexReady(event) {
 			console.log('onIndexReady', event.target);
 		}
-
-		console.log('123', 123);
 		app.$root
 			.on('lib/layout:renderBlock:done', '.app_controllers_chat-index', onIndexReady);
+
+
+
+		function onItemReady(event) {
+			console.log('onItemReady', event.target);
+			
+			
+		}
+
+		app.$root
+			.on('lib/layout:renderBlock:done', '.app_controllers_chat-item', onItemReady);
 
 
 
