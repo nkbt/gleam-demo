@@ -51,6 +51,9 @@ require([
 	'dom',
 	'lib/app',
 	'bootstrap',
+	
+	'app/widgets/sidebar',
+	
 	'lib/layout',
 	'lib/dispatcher',
 	'lib/sidebar'

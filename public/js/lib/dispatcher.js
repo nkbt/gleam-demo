@@ -15,7 +15,7 @@ define(
 	 * @param {lib/router} router
 	 * @returns {{dispatch: Function}}
 	 */
-	function (module, $, _, app, router) {
+		function (module, $, _, app, router) {
 
 
 		function getRouteFromHash() {
@@ -38,16 +38,19 @@ define(
 
 
 		function run(route) {
-			var routeParts = route.split('/'),
-				controllerName = routeParts.shift(),
-				actionName = routeParts.shift(),
+			var routeParts = route.split('!'),
+				controllerParts = routeParts.shift().split('/'),
+				query = routeParts.shift(),
+				controllerName = controllerParts.shift(),
+				actionName = controllerParts.shift(),
 				controllerModule = [config.basePath, controllerName].join('/');
 
 			require(
 				[controllerModule],
 				function controllerModuleLoaded() {
-					console.log('lib/dispatcher', 'trigger', 'lib/dispatcher:run', controllerName, actionName);
-					return app.$root.trigger('lib/dispatcher:run', [controllerName, actionName]);
+					console.log('lib/dispatcher', 'trigger', 'lib/dispatcher:run',
+						'[controller]', controllerName, '[action]', actionName, '[query]', query);
+					return app.$root.trigger('lib/dispatcher:run', [controllerName, actionName, query]);
 				},
 				function (error) {
 					console.warn('lib/dispatcher', controllerModule, error.message, error.stack.split('\n'));
