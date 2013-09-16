@@ -10,9 +10,18 @@
 		</div>
 		<div class="collapse navbar-collapse">
 			<ul class="nav navbar-nav">
-				<li class="lib_navigation-item" data-lib_navigation-match="/chat"><a href="/chat" class="lib_dispatcher-link">Chats</a></li>
-				<li class="lib_navigation-item" data-lib_navigation-match="/chat/add"><a href="/chat/add" class="lib_dispatcher-link">Create chat</a></li>
-				<li class="lib_navigation-item" data-lib_navigation-match="/user"><a href="/user" class="lib_dispatcher-link">People</a></li>
+				<li class="lib_navigation-item" data-lib_navigation-route="chat">
+					<a href="/chat" class="lib_dispatcher-link">All rooms</a>
+				</li>
+				<li class="lib_navigation-item nav-hidden" data-lib_navigation-route="chat/item">
+					<a href="javascript:void(0)">Room</a>
+				</li>
+				<li class="lib_navigation-item" data-lib_navigation-route="chat/add">
+					<a href="/chat/add" class="lib_dispatcher-link">Create room</a>
+				</li>
+				<li class="lib_navigation-item" data-lib_navigation-route="user">
+					<a href="/user" class="lib_dispatcher-link">All people</a>
+				</li>
 			</ul>
 		</div>
 	</div>

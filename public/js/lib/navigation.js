@@ -1,6 +1,6 @@
 "use strict";
 
-define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app'], function (module, $, _, app) {
+define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'], function (module, $, _, app, router) {
 
 	var config = _.defaults(module.config(), {
 			active: 'active'
@@ -22,9 +22,12 @@ define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app'], function (m
 	}
 
 	function changeUrl(path) {
+		var route = router.parse(router.route(path)),
+			match = router.clean([route.controller, route.action].join('/'));
 		return function () {
 			app.$root.find(['.lib_navigation-item', config.active].join('.')).removeClass(config.active);
-			return app.$root.find('.lib_navigation-item[data-lib_navigation-match="' + path + '"]').addClass(config.active);
+			console.log('match', match);
+			return app.$root.find('.lib_navigation-item[data-lib_navigation-route="' + match + '"]').addClass(config.active);
 		};
 	}
 
