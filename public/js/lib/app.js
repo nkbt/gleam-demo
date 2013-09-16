@@ -1,12 +1,16 @@
 "use strict";
 
-define('lib/app', ['dom'], function ($) {
-
-	var $element = $(document.body);
+define('lib/app', ['module', 'dom', 'underscore'], function (module, $, _) {
+	var config = _.defaults(module.config(), {
+			baseUrl: '/',
+			templates: 'templates',
+			views: 'views'
+		}),
+		$element = $(document.body);
 
 
 	function text(path, callback) {
-		var templateModule = ['vendor/require/text!', path].join('');
+		var templateModule = ['vendor/require/text!', config.baseUrl, path].join('');
 		return path && require(
 			[templateModule],
 			callback,
@@ -18,15 +22,15 @@ define('lib/app', ['dom'], function ($) {
 
 
 	function template(name, callback) {
-		return text(['/templates/', name, '.html'].join(''), callback);
+		return text([config.templates, '/', name, '.html'].join(''), callback);
 	}
 
 
 	function view(controller, action, callback) {
-		return text(['/views/', controller, '/', action, '.html'].join(''), callback);
+		return text([config.views, '/', controller, '/', action, '.html'].join(''), callback);
 	}
 
-	
+
 	return {
 		'$root': $element,
 		template: template,

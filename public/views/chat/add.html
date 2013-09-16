@@ -1,9 +1,11 @@
 <div class="app_controllers_chat-add">
-	<form class="app_controllers_chat-add-form" role="form" action="" method="POST">
-		<div class="form-group">
-			<label for="user">Owner name</label>
-			<input type="text" class="form-control" id="user" name="user" value="user" placeholder="Enter user name" required>
-		</div>
+	<div class="page-header">
+		<h1>Create chat
+			<small>Enter chat name</small>
+		</h1>
+	</div>
+
+	<form class="app_controllers_chat-add-form" role="form" action="/chat/add" method="POST">
 		<div class="form-group">
 			<label for="name">Chat name</label>
 			<input type="text" class="form-control" id="name" name="name" value="chat" placeholder="Enter chat name" required>

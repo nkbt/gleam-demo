@@ -75,6 +75,20 @@ define(
 		app.$root
 			.on('submit', '.app_controllers_chat-add .app_controllers_chat-add-form', onAddChatSubmit);
 
+
+
+		function onIndexReady(event) {
+			console.log('onIndexReady', event.target);
+		}
+
+		console.log('123', 123);
+		app.$root
+			.on('lib/layout:renderBlock:done', '.app_controllers_chat-index', onIndexReady);
+
+
+
+
+
 		return actions;
 
 	}

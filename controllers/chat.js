@@ -34,6 +34,32 @@ function saveChat(id, chatEntity, callback) {
 	});
 }
 
+function redisGet(key, callback) {
+	return client.get(key, callback);
+}
+
+function redisKeysGetter(condition) {
+	return function (callback) {
+		return client.keys(condition, callback);
+	};
+}
+
+function asyncMapper(mapFunction) {
+	return function (collection, callback) {
+		return async.map(collection, mapFunction, callback);
+	};
+}
+
+function entityRestorer() {
+	return function (data, callback) {
+		try {
+			return callback(null, gleam.fromJson(data));
+		} catch (error) {
+			return callback(error);
+		}
+	};
+}
+
 
 /**
  * @param {ExpressServerRequest} req
@@ -41,28 +67,12 @@ function saveChat(id, chatEntity, callback) {
  */
 exports.index = function (req, callback) {
 
-	async.waterfall([
-		client.keys.bind(client, 'chat:*'),
-		client.get.bind(client, 'chat:*')
-	]);
 
-	client.keys('chat:*', function (error, keys) {
-		if (error) {
-			return callback(error);
-		}
-
-		return async.map(keys, client.get.bind(client), function (error, chats) {
-
-			if (error) {
-				return callback(error);
-			}
-			console.log("chats", chats);
-			return callback(error, !error && _(chats).chain()
-				.toArray()
-				.map(chatCreator)
-				.value() || []);
-		});
-	});
+	return async.waterfall([
+		redisKeysGetter('chat:*'),
+		asyncMapper(redisGet),
+		asyncMapper(entityRestorer())
+	], callback);
 };
 
 

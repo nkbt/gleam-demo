@@ -3,7 +3,7 @@
 define(
 	'lib/dispatcher',
 	[
-		'module', 'dom', 'underscore', 'history', 'lib/app', 'lib/router',
+		'module', 'dom', 'underscore', 'lib/app', 'lib/router',
 		'lib/layout',
 		'lib/navigation'
 	],
@@ -11,12 +11,18 @@ define(
 	 * @param {Module} module
 	 * @param {jQuery} $
 	 * @param {underscore} _
-	 * @param {History} history
 	 * @param {lib/app} app
 	 * @param {lib/router} router
 	 * @returns {{dispatch: Function}}
 	 */
-		function (module, $, _, history, app, router) {
+	function (module, $, _, app, router) {
+
+
+		function getRouteFromHash() {
+			var hash = document.location.hash;
+			return hash.match(/^\#\!/) && hash.replace(/^\#\!/, '') || '/';
+		}
+
 
 		var config = _.defaults(module.config(), {
 				basePath: 'app/controllers'
@@ -27,7 +33,8 @@ define(
 					["\/", router.actionName, "$"].join(''),
 					["^", router.controllerName, "$"].join('')
 				].join('|')
-			);
+			),
+			currentHash = getRouteFromHash();
 
 
 		function run(route) {
@@ -51,25 +58,24 @@ define(
 
 		/**
 		 * @param {String} route
-		 * @param {String} title
 		 * @returns {*}
 		 */
-		function updateUrl(route, title) {
+		function updateUrl(route) {
 			var path = ['/', route.replace(routeCleaner, '')].join('');
-			history.pushState(null, title, path);
-			console.log('lib/dispatcher', 'trigger', 'lib/dispatcher:urlChanged', path, title);
-			return app.$root.trigger('lib/dispatcher:urlChanged', [path, title]);
+			currentHash = path;
+			document.location.hash = ['!', path].join('');
+			console.log('lib/dispatcher', 'trigger', 'lib/dispatcher:urlChanged', path);
+			return app.$root.trigger('lib/dispatcher:urlChanged', [path]);
 		}
 
 
 		/**
 		 * @param {String} route
-		 * @param {String} title
 		 * @returns {*}
 		 */
-		function dispatch(route, title) {
+		function dispatch(route) {
 			route = router.route(route);
-			updateUrl(route, title);
+			updateUrl(route);
 			return run(route);
 		}
 
@@ -98,17 +104,23 @@ define(
 			.on('lib/dispatcher:dispatch', null, onDispatch)
 			.on('click', '.lib_dispatcher-link', onClick);
 
+
 		/**
 		 * Restoring current page
 		 */
 		function restoreState() {
-			var state = history.getState();
-			console.log('lib/dispatcher', 'restoreState', state, state.hash, state.title);
-			return dispatch(state.hash, state.title);
+			console.log('lib/dispatcher', 'restoreState', currentHash);
+			return dispatch(currentHash);
 		}
 
-		history.Adapter.bind(window, 'statechange', restoreState);
 
+		$(window).on('hashchange', function () {
+			var route = getRouteFromHash();
+			if (route !== currentHash) { // will happen only on browser's "back" or "forward"
+				currentHash = route;
+				dispatch(currentHash);
+			}
+		});
 		$(restoreState);
 
 		return {

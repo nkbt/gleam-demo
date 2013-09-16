@@ -10,7 +10,6 @@ define('lib/dom/form', ['module', 'dom', 'underscore'], function (module, $, _) 
 	function values(form) {
 		var $form = $(form),
 			data = $form.serializeArray();
-		console.log('data', data);
 		return _.object(_.pluck(data, 'name'), _.pluck(data, 'value'));
 	}
 

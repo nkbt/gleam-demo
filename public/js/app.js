@@ -27,16 +27,21 @@ require.config({
 		},
 		bootstrap: ['dom']
 	},
+	config: {
+		'lib/app': {
+			baseUrl: '../'
+		}
+	},
 	deps: [
 	]
 });
 
 // Load CSS
 require([
-	'vendor/require/css!/css/bootstrap.css',
-	'vendor/require/css!/css/bootstrap-theme.css',
-	'vendor/require/css!/css/font-awesome.css',
-	'vendor/require/css!/css/style.css'
+	'vendor/require/css!../css/bootstrap.css',
+	'vendor/require/css!../css/bootstrap-theme.css',
+	'vendor/require/css!../css/font-awesome.css',
+	'vendor/require/css!../css/style.css'
 ], function () {
 	console.log('CSS loaded');
 });
@@ -54,5 +59,6 @@ require([
 
 	$(function () {
 		app.$root.trigger('lib/layout:render');
+//		app.$root.trigger('lib/dispatcher:dispatch', ['/']); // Always start from home
 	});
 });

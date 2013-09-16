@@ -4,6 +4,8 @@
 	<meta charset="UTF-8">
 	<title>Gleam Demo</title>
 </head>
+
+
 <body class="lib_layout">
 
 <div class="lib_layout lib_navigation" data-lib_layout-template="navigation"></div>
@@ -17,15 +19,10 @@
 <div class="lib_layout" data-lib_layout-template="footer"></div>
 
 <script type="text/javascript">
+
+	window.noCacheSuffix = document.location.search.match('noCache') && "_=" + (new Date()).getTime() || '';
+
 	(function () {
-		var head = document.querySelector('head'),
-				script = document.createElement('script');
-		script.type = 'text/javascript';
-		script.async = true;
-		script.setAttribute('data-main', '/js/app');
-		script.src = '/js/vendor/require.js';
-		head.appendChild(script);
-		
 		var loading = "\\|/—", tick = 0;
 		(function animate() {
 			tick = (tick + 1) % loading.length;
@@ -35,6 +32,16 @@
 				setTimeout(animate, 100);
 			}
 		})();
+	}());
+
+	(function () {
+		var head = document.querySelector('head'),
+				script = document.createElement('script');
+		script.type = 'text/javascript';
+		script.async = true;
+		script.setAttribute('data-main', ['./js/app.js', window.noCacheSuffix].join('?'));
+		script.src = ['./js/vendor/require.js', window.noCacheSuffix].join('?');
+		head.appendChild(script);
 	}());
 </script>
 </body>
