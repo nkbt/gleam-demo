@@ -5,7 +5,7 @@ define('app/controllers/user', ['dom', 'underscore', 'lib/app', 'lib/request', '
 
 	var actions = {};
 
-	
+
 	actions.index = function (template) {
 		app.$root.trigger('lib/layout:renderBlock', ['content', template]);
 	};
@@ -42,6 +42,32 @@ define('app/controllers/user', ['dom', 'underscore', 'lib/app', 'lib/request', '
 			destroy();
 		}
 	});
+
+
+	function onIndexReady(event) {
+
+		var $element = $(event.target).closest('.app_controllers_user-index'),
+			$container = $element.find('.app_controllers_user-index-container');
+
+		return request(request.METHOD_GET, '/user/index', {}, function (error, payload) {
+			$container.empty();
+
+			return _.each(payload.get('data'), function (user) {
+				return app.viewTemplate('user', 'index', 'item', function (template) {
+					console.warn('template', template);
+					return $(template).appendTo($container)
+						.find('.app_controllers_user-index-item-link')
+						.attr('href', ['#!/user/item', user.get('id')].join('!'))
+						.html(user.get('name'));
+				});
+			});
+		});
+
+
+	}
+
+	app.$root
+		.on('lib/layout:renderBlock:done', '.app_controllers_user-index', onIndexReady);
 
 
 	return actions;
