@@ -11,7 +11,6 @@ var client = redis.createClient();
 //crypto.createHash('md5').update(name).digest("hex")
 
 function chatCreator(data) {
-	console.log("data", data);
 	return gleam.entity('chat', data);
 }
 
@@ -81,7 +80,10 @@ exports.index = function (req, callback) {
  * @param {Function} callback
  */
 exports.item = function (req, callback) {
-	return getChat(req.param('id'), callback);
+	return async.waterfall([
+		async.apply(getChat, req.param('id')),
+		entityRestorer()
+	], callback);
 };
 
 

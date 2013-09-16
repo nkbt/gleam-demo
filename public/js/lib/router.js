@@ -5,11 +5,28 @@
 define('lib/router', ['module', 'underscore'], function (module, _) {
 
 	var config = _.defaults(module.config(), {
-		controllerName: 'index',
-		actionName: 'index'
-	});
+			controllerName: 'index',
+			actionName: 'index'
+		}),
+		routeCleaner = new RegExp(
+			[
+				["^", config.controllerName, "\/", config.actionName, "$"].join(''),
+				["\/", config.actionName, "$"].join(''),
+				["^", config.controllerName, "$"].join('')
+			].join('|')
+		);
 
-	function parse(url) {
+	function parse(route) {
+		var routeParts = route.split('!'),
+			controllerParts = routeParts.shift().split('/');
+		return {
+			controller: controllerParts.shift(),
+			action: controllerParts.shift(),
+			query: routeParts.shift()
+		};
+	}
+
+	function parseUrl(url) {
 		var element = document.createElement("a");
 
 		element.href = _.isString(url) && url || '/';
@@ -23,7 +40,7 @@ define('lib/router', ['module', 'underscore'], function (module, _) {
 	}
 
 	function route(url) {
-		var location = parse(url),
+		var location = parseUrl(url),
 			params = location.pathname.split('/'),
 			paramsSize = _.size(params);
 
@@ -54,11 +71,22 @@ define('lib/router', ['module', 'underscore'], function (module, _) {
 		return [config.controllerName, config.actionName].join('/');
 	}
 
+
+	function getRouteFromHash() {
+		var hash = document.location.hash;
+		return hash.match(/^\#\!/) && hash.replace(/^\#\!/, '') || '/';
+	}
+
+	function clean(route) {
+		return route.replace(routeCleaner, '');
+	}
+
 	return {
-		route: route,
 		parse: parse,
-		controllerName: config.controllerName,
-		actionName: config.actionName
+		route: route,
+		parseUrl: parseUrl,
+		getRouteFromHash: getRouteFromHash,
+		clean: clean
 	};
 
 });

@@ -4,10 +4,10 @@ define(
 	'app/controllers/chat',
 	[
 		'dom', 'underscore',
-		'lib/app', 'lib/request', 'lib/messenger', 'lib/dom/form',
+		'lib/app', 'lib/router', 'lib/request', 'lib/messenger', 'lib/dom/form',
 		'entity/chat'
 	],
-	function ($, _, app, request, messenger, form, ChatEntity) {
+	function ($, _, app, router, request, messenger, form, ChatEntity) {
 
 
 		var actions = {};
@@ -76,26 +76,27 @@ define(
 			.on('submit', '.app_controllers_chat-add .app_controllers_chat-add-form', onAddChatSubmit);
 
 
-
 		function onIndexReady(event) {
 			console.log('onIndexReady', event.target);
 		}
+
 		app.$root
 			.on('lib/layout:renderBlock:done', '.app_controllers_chat-index', onIndexReady);
 
 
-
 		function onItemReady(event) {
-			console.log('onItemReady', event.target);
-			
-			
+
+			var $element = $(event.target).closest('.app_controllers_chat-item'),
+				id = router.parse(router.getRouteFromHash()).query;
+			return request(request.METHOD_GET, '/chat/item', {id: id}, function (error, payload) {
+				var chatEntity = payload.get('data');
+				$element.find('.app_controllers_chat-item-name').html(chatEntity.get('name'));
+			});
+
 		}
 
 		app.$root
 			.on('lib/layout:renderBlock:done', '.app_controllers_chat-item', onItemReady);
-
-
-
 
 
 		return actions;

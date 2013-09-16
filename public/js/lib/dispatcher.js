@@ -18,39 +18,22 @@ define(
 		function (module, $, _, app, router) {
 
 
-		function getRouteFromHash() {
-			var hash = document.location.hash;
-			return hash.match(/^\#\!/) && hash.replace(/^\#\!/, '') || '/';
-		}
-
-
 		var config = _.defaults(module.config(), {
 				basePath: 'app/controllers'
 			}),
-			routeCleaner = new RegExp(
-				[
-					["^", router.controllerName, "\/", router.actionName, "$"].join(''),
-					["\/", router.actionName, "$"].join(''),
-					["^", router.controllerName, "$"].join('')
-				].join('|')
-			),
-			currentHash = getRouteFromHash();
+			currentHash = router.getRouteFromHash();
 
 
 		function run(route) {
-			var routeParts = route.split('!'),
-				controllerParts = routeParts.shift().split('/'),
-				query = routeParts.shift(),
-				controllerName = controllerParts.shift(),
-				actionName = controllerParts.shift(),
-				controllerModule = [config.basePath, controllerName].join('/');
+			var routeParsed = router.parse(route),
+				controllerModule = [config.basePath, routeParsed.controller].join('/');
 
 			require(
 				[controllerModule],
 				function controllerModuleLoaded() {
 					console.log('lib/dispatcher', 'trigger', 'lib/dispatcher:run',
-						'[controller]', controllerName, '[action]', actionName, '[query]', query);
-					return app.$root.trigger('lib/dispatcher:run', [controllerName, actionName, query]);
+						'[controller]', routeParsed.controller, '[action]', routeParsed.action, '[query]', routeParsed.query);
+					return app.$root.trigger('lib/dispatcher:run', [routeParsed.controller, routeParsed.action, routeParsed.query]);
 				},
 				function (error) {
 					console.warn('lib/dispatcher', controllerModule, error.message, error.stack.split('\n'));
@@ -64,7 +47,7 @@ define(
 		 * @returns {*}
 		 */
 		function updateUrl(route) {
-			var path = ['/', route.replace(routeCleaner, '')].join('');
+			var path = ['/', router.clean(route)].join('');
 			currentHash = path;
 			document.location.hash = ['!', path].join('');
 			console.log('lib/dispatcher', 'trigger', 'lib/dispatcher:urlChanged', path);
@@ -100,7 +83,7 @@ define(
 		function onClick(event) {
 			event.preventDefault();
 			var $link = $(event.target).closest('.lib_dispatcher-link');
-			return dispatch($link.attr('href'), $link.data('lib_dispatcher-title') || $link.text());
+			return dispatch($link.attr('href'));
 		}
 
 		app.$root
@@ -118,7 +101,7 @@ define(
 
 
 		$(window).on('hashchange', function () {
-			var route = getRouteFromHash();
+			var route = router.getRouteFromHash();
 			if (route !== currentHash) { // will happen only on browser's "back" or "forward"
 				currentHash = route;
 				dispatch(currentHash);
