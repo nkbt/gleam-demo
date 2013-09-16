@@ -3,7 +3,7 @@
 define('app/widgets/sidebar/users', ['dom', 'underscore', 'lib/app', 'lib/request'], function ($, _, app, request) {
 
 
-	function onChatsReady(event) {
+	function onUsersReady(event) {
 		var $element = $(event.target).closest('.app_widgets_sidebar_users'),
 			$container = $element.find('.app_widgets_sidebar_users-container');
 
@@ -22,6 +22,6 @@ define('app/widgets/sidebar/users', ['dom', 'underscore', 'lib/app', 'lib/reques
 	}
 
 	app.$root
-		.on('lib/layout:render:done', '.app_widgets_sidebar_users', onChatsReady);
+		.on('lib/layout:render:done', '.app_widgets_sidebar_users', onUsersReady);
 
 });
