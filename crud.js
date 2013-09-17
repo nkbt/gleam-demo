@@ -61,10 +61,8 @@ exports.item = function (entityName, id, callback) {
 
 
 exports.add = function (entityName, data, callback) {
-
 	var entity = gleam.entity(entityName, data),
 		id = entity.get('id');
-
 	return rowGetter(entityName)(id, function (error, chat) {
 		if (error) {
 			return callback(error);

@@ -102,13 +102,32 @@ define(
 			.on('lib/layout:renderBlock:done', '.app_controllers_chat-index', onIndexReady);
 
 
+		function messageRenderer($element) {
+			return function (messageEntity) {
+				app.viewTemplate('chat', 'item', 'message', function (template) {
+					var $template = $(template).prependTo($element);
+					return app.fill($template, 'data-app_controllers_chat-message', messageEntity.get());
+				});
+			};
+		}
+
+		function fillMessages($element, chatEntity) {
+			return request(request.METHOD_GET, '/chat-message', {}, function (error, payload) {
+				var messages = payload.get('data');
+				return _.each(messages, messageRenderer($element));
+			});
+
+		}
+
 		function onItemReady(event) {
 
 			var $element = $(event.target).closest('.app_controllers_chat-item'),
 				id = router.parse(router.getRouteFromHash()).query;
 			return request(request.METHOD_GET, '/chat/item', {id: id}, function (error, payload) {
 				var chatEntity = payload.get('data');
-				$element.find('.app_controllers_chat-item-name').html(chatEntity.get('name'));
+				app.fill($element, 'data-app_controllers_chat-item', chatEntity.get());
+
+				return fillMessages($element.find('.app_controllers_chat-item-messages'), chatEntity);
 			});
 
 		}

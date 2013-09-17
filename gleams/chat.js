@@ -16,15 +16,11 @@ var ChatEntity = {
 	 */
 	name: null,
 	/**
-	 * @type {ChatMessageEntity[]}
-	 */
-	messages: [],
-	/**
 	 * @type {Date}
 	 */
 	createdOn: null,
 
-	
+
 	/**
 	 * @private
 	 */
@@ -32,7 +28,7 @@ var ChatEntity = {
 		return !_.isEmpty(value) && _.isEqual(value, value.replace(/[^a-z_\-0-9]+/, ''));
 	},
 
-	
+
 	/**
 	 * @private
 	 */
