@@ -1,6 +1,5 @@
-/*
- * GET home page.
- */
+'use strict';
+
 
 function noCircularReplacer(obj) {
 	var cache = [];
@@ -32,7 +31,7 @@ function patchIndex(req, next) {
 }
 
 exports.index = function (req, next) {
-	
+
 	if (dispatcher.http.isPost(req)) {
 		return postIndex(req, next);
 	}
@@ -42,4 +41,9 @@ exports.index = function (req, next) {
 	}
 
 	return next(null, {'index': 'index', 'req': noCircularReplacer(req)});
+};
+
+exports.passport = function (req, next) {
+
+	return next(null, {'req.session': noCircularReplacer(req.session)});
 };
