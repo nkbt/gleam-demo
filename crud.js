@@ -1,92 +1,126 @@
 'use strict';
 
-var async = require('async');
 var gleam = require('gleam');
+var async = require('async');
 var redis = require('redis');
-var _ = require('underscore');
 var client = redis.createClient();
 
-function creator(entityName, callback) {
-	return function (data) {
-		return callback(null, gleam.entity(entityName, data));
-	}
+
+function rowGetter(entityName) {
+	return function getRow(id, callback) {
+		return client.get([entityName, id].join(':'), callback);
+	};
 }
 
-function getter(id, callback) {
-	return client.get(['chat', id].join(':'), callback);
+function rowSaver(entityName) {
+	return function saveRow(entity, callback) {
+		var id = entity.get('id');
+
+		rowGetter(entityName)(id, function (error, chat) {
+			if (error) {
+				return callback(error);
+			}
+			if (chat) {
+				return callback(new Error(['[', entityName, '] with id "', id, '" already exists'].join('')));
+			}
+			return client.set([entityName, id].join(':'), JSON.stringify(entity), function (error) {
+				return callback(error, entity, ['[', entityName, '] with id "', id, '" successfully created'].join(''));
+			});
+		});
+	};
 }
 
-function saver(id, chatEntity, callback) {
 
-	getter(id, function (error, chat) {
-		if (error) {
+function redisGet(key, callback) {
+	return client.get(key, callback);
+}
+
+
+function redisKeysGetter(condition) {
+	return function (callback) {
+		return client.keys(condition, callback);
+	};
+}
+
+
+function asyncMapper(mapFunction) {
+	return function (collection, callback) {
+		return async.map(collection, mapFunction, callback);
+	};
+}
+
+
+function entityRestorer() {
+	return function (data, callback) {
+		try {
+			return callback(null, gleam.fromJson(data));
+		} catch (error) {
 			return callback(error);
 		}
-		if (chat) {
-			return callback(new Error(["Chat with name", id, "already exists"].join(' ')));
-		}
-
-		return client.set(['chat', id].join(':'), JSON.stringify(chatEntity), function (error) {
-			console.log("chatEntity", chatEntity);
-			callback(error, chatEntity);
-		});
-	});
-}
-
-function mapper(func) {
-	return function () {
-		var args = _.toArray(arguments);
-		return func.apply(null, args);
-	}
-}
-
-function createRedisGetter(callback) {
-
+	};
 }
 
 
-function createAsyncMapper(itemMapper) {
-	return function (items, next) {
+exports.index = function (entityName) {
+	/**
+	 * @param {ExpressServerRequest} req
+	 * @param {Function} callback
+	 */
+	return function index(req, callback) {
+		return async.waterfall([
+			redisKeysGetter([entityName, '*'].join(':')),
+			asyncMapper(redisGet),
+			asyncMapper(entityRestorer())
+		], callback);
+	};
+};
 
-		return async.map(
-			items,
-			itemMapper,
-			next
-		);
 
-	}
-}
+exports.item = function (entityName) {
+	/**
+	 * @param {ExpressServerRequest} req
+	 * @param {Function} callback
+	 */
+	return function item(req, callback) {
+		return async.waterfall([
+			async.apply(rowGetter(entityName), req.param('id')),
+			entityRestorer()
+		], callback);
+	};
+};
 
-function selectEntityList(entityName, callback) {
-	async.waterfall(
-		[
 
-			client.keys.bind(client, [entityName, '*'].join(':')),
+exports.add = function (entityName) {
+	/**
+	 * @param {ExpressServerRequest} req
+	 * @param {Function} callback
+	 */
+	return function add(req, callback) {
 
-			createAsyncMapper(client.get.bind(client)),
+		return rowSaver(entityName)(gleam.entity(entityName, req.body), callback);
+	};
+};
 
-			createAsyncMapper(function (itemJson, next) {
-				return next(null, gleam.fromJson(itemJson));
-			})
 
-		],
-		callback
-	);
-}
-function selectEntity(entityName, id, callback) {
-	return client.get([entityName, id].join(':'), creator(entityName, callback));
-}
-function deleteEntity(entityName, entity, callback) {
-	return client.del([entityName, entity.get('id')].join(':'), callback);
-}
-function insertEntity(entityName, entity, callback) {
-	return client.set([entityName, entity.get('id')].join(':'), entity, callback);
-}
-function updateEntity(entityName, entity, callback) {
-	return client.set([entityName, entity.get('id')].join(':'), entity, callback);
-}
-exports.selectEntityList = selectEntityList;
-exports.selectEntity = selectEntity;
-exports.insertEntity = insertEntity;
-exports.deleteEntity = deleteEntity;
-exports.updateEntity = updateEntity;
+exports.edit = function (entityName) {
+	/**
+	 * @param {ExpressServerRequest} req
+	 * @param {Function} callback
+	 */
+	return function edit(req, callback) {
+
+		return rowSaver(entityName)(gleam.entity(entityName, req.body), callback);
+	};
+};
+
+
+exports.del = function (entityName) {
+	/**
+	 * @param {ExpressServerRequest} req
+	 * @param {Function} callback
+	 */
+	return function del(req, callback) {
+		return client.del([entityName, req.param('id')].join(':'), callback);
+	};
+};
+

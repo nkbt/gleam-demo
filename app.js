@@ -4,6 +4,7 @@ var express = require('express');
 var http = require('http');
 var path = require('path');
 var bootstrap = require('static-bootstrap');
+var passport = require('./passport').passport;
 
 var responseRenderer = require('./response-renderer');
 var errorHandler = require('./error-handler');
@@ -24,14 +25,21 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/js/entity', gleam.serveEntity);
 app.use(express.favicon());
 
-app.use(bootstrap(path.join(__dirname, 'public')));
+app.use(bootstrap(path.join(__dirname, 'public'), undefined, undefined, [
+	'/auth/twitter',
+	'/auth/twitter/callback'
+]));
 
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(express.cookieParser('qwerty1234'));
-app.use(express.session());
+app.use(express.session({secret: 'qwerty1234'}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(errorHandler(dispatcher));
 
+app.get('/auth/twitter', passport.authenticate('twitter'));
+app.get('/auth/twitter/callback', passport.authenticate('twitter', {successRedirect: '/', failureRedirect: '/'}));
 
 app.get('/users', dispatcher.route('user', 'index'));
 app.get('/chats', dispatcher.route('chat', 'index'));
