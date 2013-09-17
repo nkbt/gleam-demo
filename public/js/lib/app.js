@@ -36,11 +36,27 @@ define('lib/app', ['module', 'dom', 'underscore'], function (module, $, _) {
 	}
 
 
+	function fill($element, prefix, data) {
+		return _.each(data, function (value, key) {
+			return _.each($element.find(['[', prefix, '-', key, ']'].join('')), function (item) {
+				var $item = $(item),
+					target = $item.attr([prefix, '-', key].join(''));
+				if (target) {
+					$item.attr(target, value);
+				} else {
+					$item.html(value);
+				}
+				return $item;
+			});
+		});
+	}
+
 	return {
 		'$root': $element,
 		template: template,
 		viewTemplate: viewTemplate,
-		view: view
+		view: view,
+		fill: fill
 	};
 
 });
