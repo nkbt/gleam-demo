@@ -12,24 +12,6 @@ function rowGetter(entityName) {
 	};
 }
 
-function rowSaver(entityName) {
-	return function saveRow(entity, callback) {
-		var id = entity.get('id');
-
-		rowGetter(entityName)(id, function (error, chat) {
-			if (error) {
-				return callback(error);
-			}
-			if (chat) {
-				return callback(new Error(['[', entityName, '] with id "', id, '" already exists'].join('')));
-			}
-			return client.set([entityName, id].join(':'), JSON.stringify(entity), function (error) {
-				return callback(error, entity, ['[', entityName, '] with id "', id, '" successfully created'].join(''));
-			});
-		});
-	};
-}
-
 
 function redisGet(key, callback) {
 	return client.get(key, callback);
@@ -79,17 +61,39 @@ exports.item = function (entityName, id, callback) {
 
 
 exports.add = function (entityName, data, callback) {
-	return rowSaver(entityName)(gleam.entity(entityName, data), callback);
+
+	var entity = gleam.entity(entityName, data),
+		id = entity.get('id');
+
+	return rowGetter(entityName)(id, function (error, chat) {
+		if (error) {
+			return callback(error);
+		}
+		if (chat) {
+			return callback(new Error('Already exists'));
+		}
+		return client.set([entityName, id].join(':'), JSON.stringify(entity), function (error) {
+			return callback(error, entity);
+		});
+	});
 };
 
 
 exports.edit = function (entityName, data, callback) {
-	return rowSaver(entityName)(gleam.entity(entityName, data), callback);
+
+	var entity = gleam.entity(entityName, data),
+		id = entity.get('id');
+
+	return client.set([entityName, id].join(':'), JSON.stringify(entity), function (error) {
+		return callback(error, entity);
+	});
 };
 
 
 exports.del = function (entityName, id, callback) {
-	return client.del([entityName, id].join(':'), callback);
+	return client.del([entityName, id].join(':'), function (error) {
+		return callback(error);
+	});
 };
 
 
@@ -121,7 +125,17 @@ exports.addAction = function (entityName) {
 	 * @param {Function} callback
 	 */
 	return function add(req, callback) {
-		return exports.add(entityName, req.body, callback);
+
+		return exports.add(entityName, req.body, function (error, entity) {
+			if (error) {
+				return callback(new Error([
+					'[', entityName, '] cannot be created: ', error.message
+				].join('')));
+			}
+			return callback(null, entity, [
+				'[', entityName, '] successfully created'
+			].join(''));
+		});
 	};
 };
 
@@ -132,7 +146,16 @@ exports.editAction = function (entityName) {
 	 * @param {Function} callback
 	 */
 	return function edit(req, callback) {
-		return exports.add(entityName, req.body, callback);
+		return exports.edit(entityName, req.body, function (error, entity) {
+			if (error) {
+				return callback(new Error([
+					'[', entityName, '] cannot be updated: ', error.message
+				].join('')));
+			}
+			return callback(null, entity, [
+				'[', entityName, '] successfully updated'
+			].join(''));
+		});
 	};
 };
 
@@ -143,6 +166,16 @@ exports.delAction = function (entityName) {
 	 * @param {Function} callback
 	 */
 	return function del(req, callback) {
-		return exports.del(entityName, req.param('id'), callback);
+		var id = req.param('id');
+		return exports.del(entityName, id, function (error) {
+			if (error) {
+				return callback(new Error([
+					'[', entityName, '] with id "', id, '" cannot be deleted: ', error.message
+				].join('')));
+			}
+			return callback(null, {}, [
+				'[', entityName, '] with id "', id, '" successfully deleted'
+			].join(''));
+		});
 	};
 };
