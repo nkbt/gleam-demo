@@ -61,66 +61,88 @@ function entityRestorer() {
 }
 
 
-exports.index = function (entityName) {
+exports.index = function (entityName, callback) {
+	return async.waterfall([
+		redisKeysGetter([entityName, '*'].join(':')),
+		asyncMapper(redisGet),
+		asyncMapper(entityRestorer())
+	], callback);
+};
+
+
+exports.item = function (entityName, id, callback) {
+	return async.waterfall([
+		async.apply(rowGetter(entityName), id),
+		entityRestorer()
+	], callback);
+};
+
+
+exports.add = function (entityName, data, callback) {
+	return rowSaver(entityName)(gleam.entity(entityName, data), callback);
+};
+
+
+exports.edit = function (entityName, data, callback) {
+	return rowSaver(entityName)(gleam.entity(entityName, data), callback);
+};
+
+
+exports.del = function (entityName, id, callback) {
+	return client.del([entityName, id].join(':'), callback);
+};
+
+
+exports.indexAction = function (entityName) {
 	/**
 	 * @param {ExpressServerRequest} req
 	 * @param {Function} callback
 	 */
 	return function index(req, callback) {
-		return async.waterfall([
-			redisKeysGetter([entityName, '*'].join(':')),
-			asyncMapper(redisGet),
-			asyncMapper(entityRestorer())
-		], callback);
+		return exports.index(entityName, callback);
 	};
 };
 
 
-exports.item = function (entityName) {
+exports.itemAction = function (entityName) {
 	/**
 	 * @param {ExpressServerRequest} req
 	 * @param {Function} callback
 	 */
 	return function item(req, callback) {
-		return async.waterfall([
-			async.apply(rowGetter(entityName), req.param('id')),
-			entityRestorer()
-		], callback);
+		return exports.item(entityName, req.param('id'), callback);
 	};
 };
 
 
-exports.add = function (entityName) {
+exports.addAction = function (entityName) {
 	/**
 	 * @param {ExpressServerRequest} req
 	 * @param {Function} callback
 	 */
 	return function add(req, callback) {
-
-		return rowSaver(entityName)(gleam.entity(entityName, req.body), callback);
+		return exports.add(entityName, req.body, callback);
 	};
 };
 
 
-exports.edit = function (entityName) {
+exports.editAction = function (entityName) {
 	/**
 	 * @param {ExpressServerRequest} req
 	 * @param {Function} callback
 	 */
 	return function edit(req, callback) {
-
-		return rowSaver(entityName)(gleam.entity(entityName, req.body), callback);
+		return exports.add(entityName, req.body, callback);
 	};
 };
 
 
-exports.del = function (entityName) {
+exports.delAction = function (entityName) {
 	/**
 	 * @param {ExpressServerRequest} req
 	 * @param {Function} callback
 	 */
 	return function del(req, callback) {
-		return client.del([entityName, req.param('id')].join(':'), callback);
+		return exports.del(entityName, req.param('id'), callback);
 	};
 };
-

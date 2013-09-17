@@ -2,7 +2,7 @@
 
 var crud = require('../crud');
 
-exports.index = crud.index('user');
-exports.item = crud.item('user');
-exports.add = crud.add('user');
-exports.del = crud.del('user');
+exports.index = crud.indexAction('user');
+exports.item = crud.itemAction('user');
+exports.add = crud.addAction('user');
+exports.del = crud.delAction('user');
