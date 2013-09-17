@@ -27,15 +27,8 @@ var ChatEntity = {
 	/**
 	 * @private
 	 */
-	validateName: function (value) {
-		return !_.isEmpty(value) && _.isEqual(value, value.replace(/[^a-z_\-0-9]+/i, ''));
-	},
-
-	getId: function () {
-		if (!this.id) {
-			return this.get('name');
-		}
-		return this.id;
+	validateId: function (value) {
+		return !_.isEmpty(value) && _.isEqual(value, value.replace(/[^a-z_\-0-9]+/, ''));
 	},
 
 	getCreatedOn: function () {
