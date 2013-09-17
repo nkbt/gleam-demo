@@ -32,8 +32,9 @@ app.use(bootstrap(path.join(__dirname, 'public'), undefined, undefined, [
 
 app.use(express.bodyParser());
 app.use(express.methodOverride());
-app.use(express.cookieParser('qwerty1234'));
-app.use(express.session({secret: 'qwerty1234'}));
+app.use(express.cookieParser('cookieParser secret'));
+app.use(express.cookieSession());
+app.use(express.session({secret: 'session secret'}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(errorHandler(dispatcher));
