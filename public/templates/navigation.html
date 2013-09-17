@@ -22,8 +22,24 @@
 				<li class="lib_navigation-item" data-lib_navigation-route="user">
 					<a href="/user" class="lib_dispatcher-link">All people</a>
 				</li>
-				<li>
+				
+				<li data-lib_navigation-guest style="display: none;">
 					<a href="/auth/twitter"><i class="icon-twitter icon-large"></i> Login</a>
+				</li>
+				
+				<li class="dropdown" data-lib_navigation-user style="display: none;">
+					<a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0)">
+						<img width="24" height="24" src="" alt="" data-lib_navigation-user-name="alt" data-lib_navigation-user-avatar="src" />
+						<span data-lib_navigation-user-name></span>
+					</a>
+					<ul class="dropdown-menu">
+						<li class="lib_navigation-item" data-lib_navigation-match="/user/login">
+							<a href="/user/logout" class="lib_dispatcher-link"><i class="icon-signout"></i> Logout</a>
+						</li>
+					</ul>
+				</li>
+				
+				<li data-lib_navigation-user>
 				</li>
 			</ul>
 		</div>

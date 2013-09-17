@@ -1,6 +1,6 @@
 "use strict";
 
-define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'], function (module, $, _, app, router) {
+define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app', 'lib/router', 'lib/request'], function (module, $, _, app, router, request) {
 
 	var config = _.defaults(module.config(), {
 			active: 'active'
@@ -10,8 +10,11 @@ define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'
 
 
 	function auth(callback) {
-		callback(null, {
-			displayName: 'Guest'
+		request(request.METHOD_GET, '/user/me', {}, function (error, payload) {
+			if (error) {
+				return callback(error);
+			}
+			return callback(null, payload && payload.get('data'));
 		});
 	}
 
@@ -26,7 +29,6 @@ define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'
 			match = router.clean([route.controller, route.action].join('/'));
 		return function () {
 			app.$root.find(['.lib_navigation-item', config.active].join('.')).removeClass(config.active);
-			console.log('match', match);
 			return app.$root.find('.lib_navigation-item[data-lib_navigation-route="' + match + '"]').addClass(config.active);
 		};
 	}
@@ -48,14 +50,13 @@ define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'
 
 
 	function handleUserMenu(user) {
-		app.$root.find('[data-lib_navigation-guest]').toggle(!user);
-		app.$root.find('[data-lib_navigation-user]').toggle(!!user);
-		return user && user.displayName && app.$root.find('[data-lib_navigation-user-name]').html(user.displayName);
-	}
 
-
-	function onLogin(event, user) {
-		return handleUserMenu(user);
+		var isGuest = _.isEmpty(user);
+		app.$root.find('[data-lib_navigation-guest]').toggle(isGuest);
+		app.$root.find('[data-lib_navigation-user]').toggle(!isGuest);
+		if (!isGuest) {
+			app.fill(app.$root, 'data-lib_navigation-user', user.get());
+		}
 	}
 
 
@@ -65,8 +66,7 @@ define('lib/navigation', ['module', 'dom', 'underscore', 'lib/app', 'lib/router'
 
 	app.$root
 		.on('lib/dispatcher:urlChanged', onUrlChanged)
-		.on('app/controllers/login:success', onLogin)
-		.on('app/controllers/logout:success', onLogout)
+		.on('app/controllers/user:logout', onLogout)
 		.one('lib/layout:render:done', '.lib_navigation', init);
 
 

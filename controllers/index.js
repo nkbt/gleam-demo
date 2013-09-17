@@ -43,7 +43,7 @@ exports.index = function (req, next) {
 	return next(null, {'index': 'index', 'req': noCircularReplacer(req)});
 };
 
-exports.passport = function (req, next) {
+exports.user = function (req, next) {
 
-	return next(null, {'req.session': noCircularReplacer(req.session)});
+	return next(null, {'req.user': noCircularReplacer(req.user || {})});
 };

@@ -31,12 +31,23 @@ define('app/controllers/user', ['dom', 'underscore', 'lib/app', 'lib/request', '
 	};
 
 
+	actions.logout = function () {
+		return request(request.METHOD_GET, '/user/logout', {}, function () {
+			app.$root
+				.trigger('lib/dispatcher:dispatch', ['/'])
+				.trigger('app/controllers/user:logout');
+		});
+	};
+
+
 	function destroy() {
 	}
 
 
 	app.$root.on('lib/dispatcher:run', null, function (event, controller, action) {
-		if (controller === 'user') {
+		if (controller === 'user' && action === 'logout') {
+			actions[action].call();
+		} else if (controller === 'user') {
 			app.view(controller, action, actions[action]);
 		} else {
 			destroy();
@@ -62,7 +73,6 @@ define('app/controllers/user', ['dom', 'underscore', 'lib/app', 'lib/request', '
 				});
 			});
 		});
-
 
 	}
 
