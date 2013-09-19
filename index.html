@@ -64,11 +64,11 @@
 		</div>
 	</div>
 
-	<div id="p1" class="step slide same" data-x="0" data-y="0">
+	<div id="crud" class="step slide same" data-x="0" data-y="0">
 		<h2>Imagine your usual CRUD Insert</h2>
 	</div>
 
-	<div id="p1-1" class="step slide same" data-x="0" data-y="0">
+	<div id="crud-1" class="step slide same" data-x="0" data-y="0">
 		<h2>Imagine your usual CRUD Insert</h2>
 		<ol>
 			<li>Render form</li>
@@ -77,7 +77,7 @@
 		</ol>
 	</div>
 
-	<div id="p1-2" class="step slide same" data-x="0" data-y="0">
+	<div id="crud-2" class="step slide same" data-x="0" data-y="0">
 		<h2>Imagine your usual CRUD Insert</h2>
 		<ol>
 			<li>Render form</li>
@@ -89,7 +89,7 @@
 		</ol>
 	</div>
 
-	<div id="p1-3" class="step slide same" data-x="0" data-y="0">
+	<div id="crud-3" class="step slide same" data-x="0" data-y="0">
 		<h2>Imagine your usual CRUD Insert</h2>
 		<ol>
 			<li>Render form</li>
@@ -102,7 +102,7 @@
 		</ol>
 	</div>
 
-	<div id="p1-4" class="step slide same" data-x="0" data-y="0">
+	<div id="crud-4" class="step slide same" data-x="0" data-y="0">
 		<h2>Imagine your usual CRUD Insert</h2>
 		<ol>
 			<li>Render form</li>
@@ -118,7 +118,7 @@
 		</ol>
 	</div>
 
-	<div id="p2" class="step slide same" data-x="1100" data-y="0">
+	<div id="form" class="step slide same" data-x="1100" data-y="0">
 		<h2>Form to add chat</h2>
 		<p>&nbsp;</p>
 		<pre><code class="html">
@@ -140,7 +140,7 @@
 		</code></pre>
 	</div>
 
-	<div id="p2-1" class="step slide same" data-x="1100" data-y="0">
+	<div id="form-1" class="step slide same" data-x="1100" data-y="0">
 		<h2>Form to add chat</h2>
 		<p>With HTML5 validation</p>
 		<pre><code class="html">
@@ -164,7 +164,7 @@
 		</code></pre>
 	</div>
 
-	<div id="p3" class="step slide" data-x="2200" data-y="0">
+	<div id="validate" class="step slide same" data-x="2200" data-y="0">
 		<h2>Validate in Browser</h2>
 		<pre><code class="js">
 function isValid($form) {
@@ -183,7 +183,7 @@ function onSubmit() {
 	</div>
 
 
-	<div id="p4" class="step slide" data-x="3300" data-y="0">
+	<div id="validate-1" class="step slide same" data-x="2200" data-y="0">
 		<h2>Validate on Server</h2>
 		<pre><code class="js">
 
@@ -213,8 +213,102 @@ function chatAdd(req, res) {
 	</div>
 
 
-	<div id="more-events" class="step slide" data-x="1100" data-y="1400">
+	<div id="problem" class="step slide same" data-x="1100" data-y="1400" data-scale="1">
+		<img src="doc/problem.png" style="display: block; max-width: 90%; max-height: 90%; margin: 0 auto;" alt=""/>
 	</div>
+
+	<div id="problem-1" class="step slide same" data-x="1100" data-y="1400" data-scale="1">
+		<h2>Problem?</h2>
+		<ol>
+			<li class="highlight">Write your validation 2 times (Server JS, Client JS)</li>
+		</ol>
+	</div>
+
+	<div id="problem-2" class="step slide same" data-x="1100" data-y="1400" data-scale="1">
+		<h2>Problem?</h2>
+		<ol>
+			<li>Write your validation 2 times (Server JS, Client JS)</li>
+			<li class="highlight">Optionally one more time (HTML5)</li>
+		</ol>
+	</div>
+
+	<div id="problem-3" class="step slide same" data-x="1100" data-y="1400" data-scale="1">
+		<h2>Problem?</h2>
+		<ol>
+			<li>Write your validation 2 times (Server JS, Client JS)</li>
+			<li>Optionally one more time (HTML5)</li>
+			<li class="highlight">Check if you actually have necessary fields</li>
+		</ol>
+	</div>
+
+	<div id="problem-4" class="step slide same" data-x="1100" data-y="1400" data-scale="1">
+		<h2>Problem?</h2>
+		<ol>
+			<li>Write your validation 2 times (Server JS, Client JS)</li>
+			<li>Optionally one more time (HTML5)</li>
+			<li>Check if you actually have necessary fields</li>
+			<li class="highlight">Normalize your objects before save to have consistency</li>
+		</ol>
+	</div>
+
+	<div id="problem1" class="step slide same" data-x="2200" data-y="1400" data-scale="1">
+		<h2>Then later:</h2>
+		<ol>
+			<li class="highlight">Get data from db</li>
+		</ol>
+	</div>
+
+	<div id="problem1-1" class="step slide same" data-x="2200" data-y="1400" data-scale="1">
+		<h2>Then later:</h2>
+		<ol>
+			<li>Get data from db</li>
+			<li class="highlight">Make sure object has all necessary fields</li>
+		</ol>
+	</div>
+
+	<div id="problem1-2" class="step slide same" data-x="2200" data-y="1400" data-scale="1">
+		<h2>Then later:</h2>
+		<ol>
+			<li>Get data from db</li>
+			<li>Make sure object has all necessary fields</li>
+			<li class="highlight">Send to client</li>
+		</ol>
+	</div>
+
+	<div id="problem1-3" class="step slide same" data-x="2200" data-y="1400" data-scale="1">
+		<h2>Then later:</h2>
+		<ol>
+			<li>Get data from db</li>
+			<li>Make sure object has all necessary fields</li>
+			<li>Send to client</li>
+			<li class="highlight">Check on client if you get correct objects from server</li>
+		</ol>
+	</div>
+
+	<div id="problem1-4" class="step slide same" data-x="2200" data-y="1400" data-scale="1">
+		<h2>Then later:</h2>
+		<ol>
+			<li>Get data from db</li>
+			<li>Make sure object has all necessary fields</li>
+			<li>Send to client</li>
+			<li>Check on client if you get correct objects from server</li>
+			<li class="highlight">Check if you actually have all necessary fields</li>
+		</ol>
+	</div>
+
+	<div id="problem1-5" class="step slide same" data-x="2200" data-y="1400" data-scale="1">
+		<h2>Then later:</h2>
+		<ol>
+			<li>Get data from db</li>
+			<li>Make sure object has all necessary fields</li>
+			<li>Send to client</li>
+			<li>Check on client if you get correct objects from server</li>
+			<li>Check if you actually have all necessary fields</li>
+			<li class="highlight">And at last - SHOW THEM!</li>
+		</ol>
+		<p style="margin-top: 70px; font-size: 0.7em; color: #888; text-align: right;">Yes, yes, I am paranoic about data consistency</p>
+	</div>
+
 
 	<div id="links" class="step slide" data-x="1100" data-y="2800" data-scale="1">
 		<b>Thanks!</b>
@@ -223,18 +317,14 @@ function chatAdd(req, res) {
 	</div>
 
 
-	<div id="overview" class="step" data-x="1100" data-y="1400" data-scale="10">
-	</div>
-
-
 </div>
 
 <ul id="nav">
 	<li><a href="#title">Title</a></li>
-	<li><a href="#p1">Process</a></li>
-	<li><a href="#p2">Form</a></li>
-	<li><a href="#p3">Validate in Browser</a></li>
-	<li><a href="#p4">Validate on Server</a></li>
+	<li><a href="#crud">Process</a></li>
+	<li><a href="#form">Form</a></li>
+	<li><a href="#validate">Validate</a></li>
+	<li><a href="#problem">Problem?</a></li>
 	<li><a href="#links">links</a></li>
 </ul>
 
