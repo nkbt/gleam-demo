@@ -1,0 +1,208 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+	<meta charset="utf-8"/>
+	<meta name="viewport" content="width=1024"/>
+	<meta name="apple-mobile-web-app-capable" content="yes"/>
+	<title>Gleam.js - Node.js/Browser re-usable Entities</title>
+
+	<meta name="description" content=">Gleam.js - Node.js/Browser re-usable Entities presentation"/>
+	<meta name="author" content="Nik Butenko"/>
+
+	<link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet"/>
+
+	<link href="css/impress-demo.css" rel="stylesheet"/>
+
+	<link rel="shortcut icon" href="favicon.png"/>
+	<link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+
+	<link rel="stylesheet" href="css/highlight/tomorrow-night-eighties.css">
+</head>
+
+<body class="impress-not-supported">
+
+
+<div class="fallback-message">
+	<p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+	<p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+</div>
+
+<!--
+
+    Now that's the core element used by impress.js.
+
+    That's the wrapper for your presentation steps. In this element all the impress.js magic happens.
+    It doesn't have to be a `<div>`. Only `id` is important here as that's how the script find it.
+
+    You probably won't need it now, but there are some configuration options that can be set on this element.
+
+    To change the duration of the transition between slides use `data-transition-duration="2000"` giving it
+    a number of ms. It defaults to 1000 (1s).
+
+    You can also control the perspective with `data-perspective="500"` giving it a number of pixels.
+    It defaults to 1000. You can set it to 0 if you don't want any 3D effects.
+    If you are willing to change this value make sure you understand how CSS perspective works:
+    https://developer.mozilla.org/en/CSS/perspective
+
+    But as I said, you won't need it for now, so don't worry - there are some simple but interesing things
+    right around the corner of this tag ;)
+
+-->
+
+<div id="impress" data-transition-duration="500">
+
+	<div id="title" class="step" data-x="1100" data-y="-1000" data-scale="1">
+		<p class="try">Node.js/Browser re-usable Entities</p>
+
+		<h1>Gleam.js</h1>
+		<p>for consistency of interfaces and data&nbsp;validation</p>
+
+		<div class="footnote">
+			<p>Sydney, 19th September 2013</p>
+			<p>Nik Butenko</p>
+		</div>
+	</div>
+
+	<div id="p1" class="step slide step-same" data-x="0" data-y="0">
+		<h2>Imagine your usual CRUD Insert</h2>
+		<ul>
+			<li>Render form</li>
+			<li>Validate input</li>
+			<li>Send JSON to server</li>
+			<li>Unserialize JSON</li>
+			<li>Validate input</li>
+			<li>Normalize object</li>
+			<li>Save to DB</li>
+		</ul>
+	</div>
+
+	<div id="p1-1" class="step slide step-same" data-x="0" data-y="0">
+		<h2>Imagine your usual CRUD Insert</h2>
+		<ul>
+			<li>Render form</li>
+			<li class="highlight">Validate input</li>
+			<li>Send JSON to server</li>
+			<li>Unserialize JSON</li>
+			<li>Validate input</li>
+			<li>Normalize object</li>
+			<li>Save to DB</li>
+		</ul>
+	</div>
+
+	<div id="p1-2" class="step slide step-same" data-x="0" data-y="0">
+		<h2>Imagine your usual CRUD Insert</h2>
+		<ul>
+			<li>Render form</li>
+			<li>Validate input</li>
+			<li>Send JSON to server</li>
+			<li>Unserialize JSON</li>
+			<li class="highlight">Validate input</li>
+			<li>Normalize object</li>
+			<li>Save to DB</li>
+		</ul>
+	</div>
+
+	<div id="p1-3" class="step slide step-same" data-x="0" data-y="0">
+		<h2>Imagine your usual CRUD Insert</h2>
+		<ul>
+			<li>Render form</li>
+			<li>Validate input</li>
+			<li>Send JSON to server</li>
+			<li>Unserialize JSON</li>
+			<li>Validate input</li>
+			<li class="highlight">Normalize object</li>
+			<li>Save to DB</li>
+		</ul>
+	</div>
+
+	<div id="p1-4" class="step slide step-same" data-x="0" data-y="0">
+		<h2>Imagine your usual CRUD Insert</h2>
+		<ul>
+			<li>Render form</li>
+			<li>Validate input / <span class="highlight">Browser</span></li>
+			<li>Send JSON to server</li>
+			<li>Unserialize JSON</li>
+			<li>Validate input / <span class="highlight">Server</span></li>
+			<li>Normalize object / <span class="highlight">Server</span></li>
+			<li>Save to DB</li>
+		</ul>
+	</div>
+
+	<div id="p2" class="step slide" data-x="1100" data-y="0">
+		<pre><code class="html">
+<ul id="nav">
+	<li><a href="#title">title</a></li>
+	<li><a href="#p1">1</a></li>
+	<li><a href="#p2">2</a></li>
+	<li><a href="#p3">3</a></li>
+	<li><a href="#p4">4</a></li>
+	<li><a href="#links">links</a></li>
+</ul>
+		</code></pre>
+	</div>
+
+	<div id="event" class="step slide" data-x="2200" data-y="0">
+		<pre><code class="js">
+// compute target state of the canvas based on given step
+var target = {
+	rotate: {
+		x: -step.rotate.x,
+		y: -step.rotate.y,
+		z: -step.rotate.z
+	},
+	translate: {
+		x: -step.translate.x,
+		y: -step.translate.y,
+		z: -step.translate.z
+	},
+	scale: 1 / step.scale
+};
+		</code></pre>
+	</div>
+
+	<div id="more-events" class="step slide" data-x="1100" data-y="1400" data-scale="2">
+	</div>
+
+	<div id="links" class="step slide" data-x="1100" data-y="2800" data-scale="1">
+		<b>Thanks!</b>
+		<p><a href="https://github.com/nkbt/gleam-demo" target="_blank">https:// github.com / <strong>nkbt</strong> / gleam-demo</a></p>
+		<p><a href="http://butenko.me" target="_blank">http:// <strong>butenko.me</strong></a></p>
+	</div>
+
+
+	<div id="overview" class="step" data-x="1100" data-y="1400" data-scale="10">
+	</div>
+
+
+</div>
+
+<ul id="nav">
+	<li><a href="#title">title</a></li>
+	<li><a href="#p1">1</a></li>
+	<li><a href="#p2">2</a></li>
+	<li><a href="#p3">3</a></li>
+	<li><a href="#p4">4</a></li>
+	<li><a href="#links">links</a></li>
+</ul>
+
+
+<script type="text/javascript">
+	Array.prototype.slice.apply(document.querySelectorAll('code.html')).forEach(function(element) {
+		console.log('element', element);
+		element.innerHTML = element.innerHTML.trim()
+			.replace(/</g, '&lt;')
+			.replace(/>/g, '&gt;')
+			.replace(/ /g, '&nbsp;')
+			.replace(/\t/g, '&nbsp;&nbsp;&nbsp;&nbsp;')					
+	})
+</script>
+<script src="js/impress.js"></script>
+<script>impress().init();</script>
+<script src="js/highlight.js"></script>
+<script>
+	hljs.tabReplace = '    '
+	hljs.initHighlightingOnLoad();
+</script>
+</body>
+</html>
