@@ -214,7 +214,9 @@ function chatAdd(req, res) {
 
 
 	<div id="problem" class="step slide same" data-x="1100" data-y="1400" data-scale="1">
-		<img src="doc/problem.png" style="display: block; max-width: 90%; max-height: 90%; margin: 0 auto;" alt=""/>
+		<h2>Problem?</h2>
+		<img src="doc/problem.jpg" style="display: block; max-width: 90%; max-height: 80%; margin: 0 auto;" alt=""/>
+		<p style="position: absolute; bottom: 1em; right: 2em; font-size: 10px; color: #888; text-align: right;">Pic by The Mary Sue www.themarysue.com</p>
 	</div>
 
 	<div id="problem-1" class="step slide same" data-x="1100" data-y="1400" data-scale="1">
@@ -310,7 +312,204 @@ function chatAdd(req, res) {
 	</div>
 
 
-	<div id="links" class="step slide" data-x="1100" data-y="2800" data-scale="1">
+	<div id="gleam" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Gleam to the rescue!</h2>
+		<img src="doc/to-the-rescue.jpg" style="display: block; max-width: 90%; max-height: 80%; margin: 0 auto;" alt=""/>
+		<p style="position: absolute; bottom: 1em; right: 2em; font-size: 10px; color: #888; text-align: right;">Pic by The Mary Sue www.themarysue.com</p>
+	</div>
+
+	
+	<div id="gleam-1" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Add to your ExpressJS project</h2>
+		<pre><code class="js">
+// Install Gleam first "npm install nkbt/gleam" 
+//	or add as dependency - "gleam": "nkbt/gleam"
+	
+// ./app.js
+
+// Require and configure Gleam
+var gleam = require('gleam');
+gleam.setRoot(path.join(__dirname, 'gleams'));
+
+// [...] Do some ExpressJS configuration
+			
+// Add entity-serving middle-ware
+// somewhere after static middleware
+app.use(express.static(path.join(__dirname, 'public')));
+app.use('/js/entity', gleam.serveEntity);
+		</code></pre>
+	</div>
+	
+	<div id="gleam-2" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Write your Entity</h2>
+		<pre><code class="js">
+// ./gleams/chat.js
+'use strict';
+
+var ChatEntity = {
+	id: null,
+	name: null,
+	createdOn: null
+};
+
+// You need to export "Entity"
+exports.Entity = ChatEntity;
+		</code></pre>
+	</div>
+	
+	<div id="gleam-2-1" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Add validation</h2>
+		<pre><code class="js">
+// ./gleams/chat.js
+
+var ChatEntity = {
+
+	//...
+
+	validateId: function (value) {
+		return !_.isEmpty(value) 
+			&& _.isEqual(value, value.replace(/[^a-z_\-0-9]+/, ''));
+	},
+
+	validateName: function (value) {
+		return !_.isEmpty(value);
+	}
+
+};
+		</code></pre>
+	</div>
+	
+	<div id="gleam-2-2" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Add getters/setters</h2>
+		<pre><code class="js">
+// ./gleams/chat.js
+
+var ChatEntity = {
+
+	//...
+
+	getCreatedOn: function () {
+		if (!this.createdOn) {
+			var now = new Date();
+			return now.getTime();
+		}
+		return this.createdOn;
+	}
+
+};
+		</code></pre>
+	</div>
+	
+	<div id="gleam-3" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Run your app and try:</h2>
+		<ol>
+			<li class="highlight">/js/entity/chat.js</li>
+			<li>/js/entity/from-json.js</li>
+			<li>/js/entity/abstract.js</li>
+			<li>/js/entity/inherit.js</li>
+		</ol>
+	</div>
+	
+	<div id="gleam-4" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Submit form</h2>
+		
+		<pre><code class="js">
+"use strict";
+
+define(['entity/chat'], function (ChatEntity) {
+
+	var chatEntity = new ChatEntity();
+	try {
+		chatEntity.set(getValues($form));
+	} catch (error) {
+		return alert(error.message);
+	}
+	// Submit to server
+
+});
+		</code></pre>
+	</div>
+	
+	<div id="gleam-5" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Restore JSON</h2>
+		
+		<pre><code class="js">
+"use strict";
+
+define(['entity/from-json'], function (fromJson) {
+
+	$.ajax({
+		url: '', data: {/* some data */},
+		dataType: 'text', // We need text!
+		success: function (jsonString) {
+			return fromJson(jsonString, function(error, entity) {
+				console.log(entity);
+			});
+		}
+	});
+
+});
+		</code></pre>
+	</div>
+	
+	
+	<div id="gleam-6" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Save on server</h2>
+		
+		<pre><code class="js">
+"use strict";
+
+var gleam = require('gleam');
+
+function addChat(req, res) {
+	try {
+		var chatEntity = gleam.entity('chat', req.body);
+	} catch (error) {
+		// handle
+	}
+	// save chatEntity in DB
+	db.save(chatEntity.get());
+};
+		</code></pre>
+	</div>	
+	
+	<div id="gleam-7" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Get on server</h2>
+		
+		<pre><code class="js">
+"use strict";
+
+var gleam = require('gleam');
+
+function getChat(req, res) {
+	db.get(req.param.id, function(json) {
+		try {
+			var chatEntity = gleam.fromJson(json);
+		} catch (error) {
+			// handle
+		}
+		res.json(chatEntity.get());
+	})
+};
+		</code></pre>
+	</div>
+
+	
+	<div id="summary" class="step slide same" data-x="2200" data-y="2800" data-scale="2">
+		<h2>Summary</h2>
+		
+		<ol>
+			<li>Write your entity once</li>
+			<li>Write your validation, type casting, getters once</li>
+			<li>Use it on a server</li>
+			<li>Re-use it in your browser</li>
+			<li>Always be sure your objects have all properties</li>
+		</ol>
+		
+	</div>
+
+
+	<div id="links" class="step slide" data-x="2200" data-y="5600" data-scale="4">
 		<b>Thanks!</b>
 		<p><a href="https://github.com/nkbt/gleam-demo" target="_blank">https:// github.com / <strong>nkbt</strong> / gleam-demo</a></p>
 		<p><a href="http://butenko.me" target="_blank">http:// <strong>butenko.me</strong></a></p>
@@ -325,7 +524,9 @@ function chatAdd(req, res) {
 	<li><a href="#form">Form</a></li>
 	<li><a href="#validate">Validate</a></li>
 	<li><a href="#problem">Problem?</a></li>
-	<li><a href="#links">links</a></li>
+	<li><a href="#gleam">Gleam</a></li>
+	<li><a href="#summary">Summary</a></li>
+	<li><a href="#links">Thanks</a></li>
 </ul>
 
 
