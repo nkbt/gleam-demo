@@ -197,8 +197,8 @@ a:focus {
 }
 
 .impress-enabled .step.active { opacity: 1 }
-.impress-enabled .step.step-same {opacity: 0}
-.impress-enabled .step.step-same.active {opacity: 1}
+.impress-enabled .step.same {opacity: 0}
+.impress-enabled .step.same.active {opacity: 1}
 
 /*
     These 'slide' step styles were heavily inspired by HTML5 Slides:
@@ -254,7 +254,12 @@ a:focus {
 	padding-left: 2em;
 	line-height: 1.2em;
 }
-.slide ul li + li {
+.slide ol {
+	list-style: decimal;
+	padding-left: 2em;
+	line-height: 1.2em;
+}
+.slide li + li {
 	margin-top: 0.7em;
 }
 
@@ -353,8 +358,9 @@ a:focus {
 .impress-enabled #impress { pointer-events: auto }
 
 
-.impress-enabled pre {  }
-.impress-enabled pre code { font-family: Consolas, "Liberation Mono", Courier, monospace; font-size: 0.8em; line-height: 1; margin: 1em 0; max-height: 50%; overflow-y: auto; max-height: 50%; }
+.impress-enabled pre { max-height: 70%; overflow-y: auto;}
+.impress-enabled pre code { font-family: Consolas, "Liberation Mono", Courier, monospace; font-size: 0.8em; line-height: 1.2em;
+	max-height: 70%; overflow-x: auto; padding: 1em; }
 
 
 #nav { position: fixed; left: 0; width: 100%; text-align: center; bottom: 1em; height: 1em; font-size: 16px; z-index: 20000; white-space: nowrap;}

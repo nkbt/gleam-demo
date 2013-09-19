@@ -64,104 +64,156 @@
 		</div>
 	</div>
 
-	<div id="p1" class="step slide step-same" data-x="0" data-y="0">
+	<div id="p1" class="step slide same" data-x="0" data-y="0">
 		<h2>Imagine your usual CRUD Insert</h2>
-		<ul>
-			<li>Render form</li>
-			<li>Validate input</li>
-			<li>Send JSON to server</li>
-			<li>Unserialize JSON</li>
-			<li>Validate input</li>
-			<li>Normalize object</li>
-			<li>Save to DB</li>
-		</ul>
 	</div>
 
-	<div id="p1-1" class="step slide step-same" data-x="0" data-y="0">
+	<div id="p1-1" class="step slide same" data-x="0" data-y="0">
 		<h2>Imagine your usual CRUD Insert</h2>
-		<ul>
+		<ol>
 			<li>Render form</li>
-			<li class="highlight">Validate input</li>
-			<li>Send JSON to server</li>
-			<li>Unserialize JSON</li>
-			<li>Validate input</li>
-			<li>Normalize object</li>
-			<li>Save to DB</li>
-		</ul>
+			<li>Listen to submit</li>
+			<li><span class="highlight">Validate input</span> / <span class="highlight">Browser</span></li>
+		</ol>
 	</div>
 
-	<div id="p1-2" class="step slide step-same" data-x="0" data-y="0">
+	<div id="p1-2" class="step slide same" data-x="0" data-y="0">
 		<h2>Imagine your usual CRUD Insert</h2>
-		<ul>
+		<ol>
 			<li>Render form</li>
-			<li>Validate input</li>
+			<li>Listen to submit</li>
+			<li><span class="highlight">Validate input</span> / <span class="highlight">Browser</span></li>
 			<li>Send JSON to server</li>
 			<li>Unserialize JSON</li>
-			<li class="highlight">Validate input</li>
-			<li>Normalize object</li>
-			<li>Save to DB</li>
-		</ul>
+			<li><span class="highlight">Validate input</span> / <span class="highlight">Server</span></li>
+		</ol>
 	</div>
 
-	<div id="p1-3" class="step slide step-same" data-x="0" data-y="0">
+	<div id="p1-3" class="step slide same" data-x="0" data-y="0">
 		<h2>Imagine your usual CRUD Insert</h2>
-		<ul>
+		<ol>
 			<li>Render form</li>
-			<li>Validate input</li>
+			<li>Listen to submit</li>
+			<li><span class="highlight">Validate input</span> / <span class="highlight">Browser</span></li>
 			<li>Send JSON to server</li>
 			<li>Unserialize JSON</li>
-			<li>Validate input</li>
-			<li class="highlight">Normalize object</li>
-			<li>Save to DB</li>
-		</ul>
+			<li><span class="highlight">Validate input</span> / <span class="highlight">Server</span></li>
+			<li><span class="highlight">Normalize object</span> / <span class="highlight">Server</span></li>
+		</ol>
 	</div>
 
-	<div id="p1-4" class="step slide step-same" data-x="0" data-y="0">
+	<div id="p1-4" class="step slide same" data-x="0" data-y="0">
 		<h2>Imagine your usual CRUD Insert</h2>
-		<ul>
+		<ol>
 			<li>Render form</li>
-			<li>Validate input / <span class="highlight">Browser</span></li>
+			<li>Listen to submit</li>
+			<li><span class="highlight">Validate input</span> / <span class="highlight">Browser</span></li>
 			<li>Send JSON to server</li>
 			<li>Unserialize JSON</li>
-			<li>Validate input / <span class="highlight">Server</span></li>
-			<li>Normalize object / <span class="highlight">Server</span></li>
+			<li><span class="highlight">Validate input</span> / <span class="highlight">Server</span></li>
+			<li><span class="highlight">Normalize object</span> / <span class="highlight">Server</span></li>
 			<li>Save to DB</li>
-		</ul>
+			<li>???</li>
+			<li class="highlight">PROFIT!</li>
+		</ol>
 	</div>
 
-	<div id="p2" class="step slide" data-x="1100" data-y="0">
+	<div id="p2" class="step slide same" data-x="1100" data-y="0">
+		<h2>Form to add chat</h2>
+		<p>&nbsp;</p>
 		<pre><code class="html">
-<ul id="nav">
-	<li><a href="#title">title</a></li>
-	<li><a href="#p1">1</a></li>
-	<li><a href="#p2">2</a></li>
-	<li><a href="#p3">3</a></li>
-	<li><a href="#p4">4</a></li>
-	<li><a href="#links">links</a></li>
-</ul>
+<form role="form" action="/chat/add" method="POST">
+
+	<div class="form-group">
+		<label for="id">Link</label>
+		<input type="text" class="form-control" name="id" id="id">
+	</div>
+
+	<div class="form-group">
+		<label for="name">Title</label>
+		<input type="text" class="form-control" name="name" id="name">
+	</div>
+
+	<button type="submit" class="btn btn-default">Submit</button>
+
+</form>
 		</code></pre>
 	</div>
 
-	<div id="event" class="step slide" data-x="2200" data-y="0">
+	<div id="p2-1" class="step slide same" data-x="1100" data-y="0">
+		<h2>Form to add chat</h2>
+		<p>With HTML5 validation</p>
+		<pre><code class="html">
+
+<form role="form" action="/chat/add" method="POST">
+
+	<div class="form-group">
+		<label for="id">Link</label>
+		<input required pattern="[a-z_\-0-9]+" type="text" class="form-control" name="id" id="id">
+	</div>
+
+	<div class="form-group">
+		<label for="name">Title</label>
+		<input required type="text" class="form-control" name="name" id="name">
+	</div>
+
+	<button type="submit" class="btn btn-default">Submit</button>
+
+</form>
+
+		</code></pre>
+	</div>
+
+	<div id="p3" class="step slide" data-x="2200" data-y="0">
+		<h2>Validate in Browser</h2>
 		<pre><code class="js">
-// compute target state of the canvas based on given step
-var target = {
-	rotate: {
-		x: -step.rotate.x,
-		y: -step.rotate.y,
-		z: -step.rotate.z
-	},
-	translate: {
-		x: -step.translate.x,
-		y: -step.translate.y,
-		z: -step.translate.z
-	},
-	scale: 1 / step.scale
-};
+function isValid($form) {
+	var id = $form.find('[name=id]').val(),
+			name = $form.find('[name=name]').val();
+	return id.length && id.match('/^[a-z_-0-9]+/$') && name.length;
+
+}
+function onSubmit() {
+	var $form = $(this);
+	if (isValid($form)) {
+		sendToServer($form);
+	}
+}
 		</code></pre>
 	</div>
 
-	<div id="more-events" class="step slide" data-x="1100" data-y="1400" data-scale="2">
+
+	<div id="p4" class="step slide" data-x="3300" data-y="0">
+		<h2>Validate on Server</h2>
+		<pre><code class="js">
+
+function isValid(data) {
+	return data.id 
+			&& data.id.length 
+			&& data.id.match('/^[a-z_-0-9]+/$') 
+			&& data.name 
+			&& data.name.length;
+
+}
+function chatAdd(req, res) {
+	if (isValid(req.body)) {
+		return saveToDb(
+			normalize(req.body), 
+			renderResponse(res)
+		);
+	}
+
+	return renderResponse(res)({
+		error: true, 
+		message: "OMG!"
+	});
+}
+
+		</code></pre>
+	</div>
+
+
+	<div id="more-events" class="step slide" data-x="1100" data-y="1400">
 	</div>
 
 	<div id="links" class="step slide" data-x="1100" data-y="2800" data-scale="1">
@@ -178,18 +230,20 @@ var target = {
 </div>
 
 <ul id="nav">
-	<li><a href="#title">title</a></li>
-	<li><a href="#p1">1</a></li>
-	<li><a href="#p2">2</a></li>
-	<li><a href="#p3">3</a></li>
-	<li><a href="#p4">4</a></li>
+	<li><a href="#title">Title</a></li>
+	<li><a href="#p1">Process</a></li>
+	<li><a href="#p2">Form</a></li>
+	<li><a href="#p3">Validate in Browser</a></li>
+	<li><a href="#p4">Validate on Server</a></li>
 	<li><a href="#links">links</a></li>
 </ul>
 
 
 <script type="text/javascript">
-	Array.prototype.slice.apply(document.querySelectorAll('code.html')).forEach(function(element) {
-		console.log('element', element);
+	Array.prototype.slice.apply(document.querySelectorAll('pre code')).forEach(function(element) {
+		element.innerHTML = element.innerHTML.trim();
+	})
+	Array.prototype.slice.apply(document.querySelectorAll('pre code.html')).forEach(function(element) {
 		element.innerHTML = element.innerHTML.trim()
 			.replace(/</g, '&lt;')
 			.replace(/>/g, '&gt;')
