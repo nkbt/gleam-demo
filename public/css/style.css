@@ -74,3 +74,11 @@ footer {
 }
 .users:empty:after { content: "No users found"; }
 .chats:empty:after { content: "No chats found"; }
+
+
+.chat-messages:empty:after {
+	display: block;
+	color: rgba(0, 0, 0, 0.3);
+	text-align: center;
+	content: "No messages found";
+}

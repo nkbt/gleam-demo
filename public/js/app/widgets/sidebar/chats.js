@@ -12,10 +12,12 @@ define('app/widgets/sidebar/chats', ['dom', 'underscore', 'lib/app', 'lib/reques
 
 			return _.each(payload.get('data'), function (chat) {
 				return app.template('widgets/sidebar/chats/item', function (template) {
-					return $(template).appendTo($container)
+					var $template = $(template);
+					$template
 						.find('.app_widgets_sidebar_chats-item-link')
-						.attr('href', ['#!/chat/item', chat.get('id')].join('!'))
-						.html(chat.get('name'));
+						.attr('href', ['#!/chat/item', chat.get('id')].join('!'));
+					app.fill($template, 'data-app_widgets_sidebar_chats-item', chat.get());
+					return $template.appendTo($container);
 				});
 			});
 		});

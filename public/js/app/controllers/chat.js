@@ -28,6 +28,16 @@ define(
 		};
 
 
+		actions.add2 = function (template) {
+			app.$root.trigger('lib/layout:renderBlock', ['content', template]);
+		};
+
+
+		actions.add3 = function (template) {
+			app.$root.trigger('lib/layout:renderBlock', ['content', template]);
+		};
+
+
 		actions.edit = function (template) {
 			app.$root.trigger('lib/layout:renderBlock', ['content', template]);
 		};
@@ -40,15 +50,6 @@ define(
 
 		function destroy() {
 		}
-
-
-		app.$root.on('lib/dispatcher:run', null, function (event, controller, action) {
-			if (controller === 'chat') {
-				app.view(controller, action, actions[action]);
-			} else {
-				destroy();
-			}
-		});
 
 
 		function onAddChatSubmit(event) {
@@ -72,8 +73,20 @@ define(
 			});
 		}
 
-		app.$root
-			.on('submit', '.app_controllers_chat-add .app_controllers_chat-add-form', onAddChatSubmit);
+
+		function onAdd2ChatSubmit(event) {
+			event.preventDefault();
+			var $form = $(event.target).closest('.app_controllers_chat-add2-form');
+
+			form.disable($form);
+
+			return request(request.METHOD_POST, $form.attr('action'), form.values($form), function (error) {
+				if (!error) {
+					form.clear($form);
+				}
+				form.enable($form);
+			});
+		}
 
 
 		function onIndexReady(event) {
@@ -94,12 +107,7 @@ define(
 					});
 				});
 			});
-
-
 		}
-
-		app.$root
-			.on('lib/layout:renderBlock:done', '.app_controllers_chat-index', onIndexReady);
 
 
 		function messageRenderer($element) {
@@ -116,7 +124,6 @@ define(
 				var messages = payload.get('data');
 				return _.each(messages, messageRenderer($element));
 			});
-
 		}
 
 		function onItemReady(event) {
@@ -133,6 +140,16 @@ define(
 		}
 
 		app.$root
+			.on('lib/dispatcher:run', null, function (event, controller, action) {
+				if (controller === 'chat') {
+					app.view(controller, action, actions[action]);
+				} else {
+					destroy();
+				}
+			})
+			.on('submit', '.app_controllers_chat-add .app_controllers_chat-add-form', onAddChatSubmit)
+			.on('submit', '.app_controllers_chat-add2 .app_controllers_chat-add2-form', onAdd2ChatSubmit)
+			.on('lib/layout:renderBlock:done', '.app_controllers_chat-index', onIndexReady)
 			.on('lib/layout:renderBlock:done', '.app_controllers_chat-item', onItemReady);
 
 

@@ -1,6 +1,6 @@
 <div class="app_controllers_chat-add">
 	<div class="page-header">
-		<h1>Create room <small>Full validation</small></h1>
+		<h1>Create room <small>No HTML5 validation</small></h1>
 	</div>
 
 	
@@ -15,12 +15,12 @@
 			<form class="app_controllers_chat-add-form" role="form" action="/chat/add" method="POST">
 				<div class="form-group">
 					<label for="id">Link</label>
-					<input type="text" class="form-control" id="id" name="id" value="" pattern="[a-z_\-0-9]+" placeholder="Enter chat link" required>
+					<input type="text" class="form-control" id="id" name="id" value="" placeholder="Enter chat link">
 				    <p class="help-block">Lowercase letters, numbers, dash and underscore only [a-z_\-0-9]</p>
 				</div>
 				<div class="form-group">
 					<label for="name">Title</label>
-					<input type="text" class="form-control" id="name" name="name" value="" placeholder="Enter chat name" required>
+					<input type="text" class="form-control" id="name" name="name" value="" placeholder="Enter chat name">
 				</div>
 				<button type="submit" class="btn btn-default">Submit</button>
 			</form>

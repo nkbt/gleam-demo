@@ -53,7 +53,7 @@ module.exports = function (gleam) {
 		}
 
 
-		if (error) {
+		if (error && !messages.length) {
 			if (!(error instanceof Error)) {
 				error = new Error(error);
 			}
